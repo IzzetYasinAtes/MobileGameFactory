@@ -1,3 +1,4 @@
+using IslandMerge.Controls;
 using IslandMerge.ViewModels;
 
 namespace IslandMerge.Views;
@@ -20,5 +21,27 @@ public partial class BiomeSelectPage : ContentPage
         {
             await _vm.LoadCommand.ExecuteAsync(null);
         }
+    }
+
+    private void BiomeBorder_Loaded(object? sender, EventArgs e)
+    {
+        if (sender is not Border border)
+        {
+            return;
+        }
+
+        if (border.BindingContext is not BiomeCardVm card)
+        {
+            return;
+        }
+
+        if (!card.JustUnlocked)
+        {
+            return;
+        }
+
+        // Tek atislik reveal: tekrar oynatma.
+        card.JustUnlocked = false;
+        _ = SpriteAnimator.UnlockReveal(border);
     }
 }

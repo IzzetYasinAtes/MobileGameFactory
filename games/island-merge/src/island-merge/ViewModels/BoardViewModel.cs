@@ -13,6 +13,7 @@ public sealed partial class BoardViewModel : BaseViewModel
     private readonly IAdService _adService;
     private readonly IInterstitialGuard _interstitialGuard;
     private readonly IRewardedCooldown _rewardedCooldown;
+    private readonly ISelectedCharacterStore _characters;
     private readonly ILogger<BoardViewModel> _logger;
 
     [ObservableProperty]
@@ -30,25 +31,52 @@ public sealed partial class BoardViewModel : BaseViewModel
     [ObservableProperty]
     private bool _canWatchAdForEnergy = true;
 
+    [ObservableProperty]
+    private string _petIconSource = "character_momo.png";
+
     public ObservableCollection<BoardCellVm> Cells { get; } = new();
+
+    /// <summary>Merge basarili — ilgili hedef hucre icin pop animation istegi.</summary>
+    public event EventHandler<int>? TileMerged;
+
+    /// <summary>Aktif gorev tamamlandi — pet icin jump animation istegi.</summary>
+    public event EventHandler? QuestCompleted;
+
+    /// <summary>Level complete sonucunda yeni biome acildi.</summary>
+    public event EventHandler<BiomeId>? BiomeUnlocked;
 
     public BoardViewModel(
         IGameSession session,
         IAdService adService,
         IInterstitialGuard interstitialGuard,
         IRewardedCooldown rewardedCooldown,
+        ISelectedCharacterStore characters,
         ILogger<BoardViewModel> logger)
     {
         _session = session;
         _adService = adService;
         _interstitialGuard = interstitialGuard;
         _rewardedCooldown = rewardedCooldown;
+        _characters = characters;
         _logger = logger;
         Title = "Ada";
         for (var i = 0; i < BoardConstants.CellCount; i++)
         {
             Cells.Add(new BoardCellVm { Index = i });
         }
+        RefreshPetIcon();
+    }
+
+    private void RefreshPetIcon()
+    {
+        var selected = _characters.HasSelection ? _characters.GetSelected() : CharacterId.Momo;
+        PetIconSource = selected switch
+        {
+            CharacterId.Kasif => "character_kasif.png",
+            CharacterId.Lila => "character_lila.png",
+            CharacterId.Papagan => "character_papagan.png",
+            _ => "character_momo.png",
+        };
     }
 
     [RelayCommand]
@@ -66,6 +94,7 @@ public sealed partial class BoardViewModel : BaseViewModel
             RebuildCells();
             UpdateHud();
             RefreshAdAvailability();
+            RefreshPetIcon();
         }
         finally
         {
@@ -87,6 +116,12 @@ public sealed partial class BoardViewModel : BaseViewModel
         RebuildCells();
         UpdateHud();
 
+        // Animator hook: merge'in hedef hucresi icin pop tetikle.
+        if (outcome.MergedItem.CellIndex is int mergedIdx)
+        {
+            TileMerged?.Invoke(this, mergedIdx);
+        }
+
         foreach (var qid in outcome.QuestIdsProgressed)
         {
             var q = _session.ActiveQuests.FirstOrDefault(x => x.Id == qid);
@@ -95,6 +130,7 @@ public sealed partial class BoardViewModel : BaseViewModel
                 await _session.CompleteQuestAsync(q.Id).ConfigureAwait(true);
                 StatusText = "Gorev tamam!";
                 UpdateHud();
+                QuestCompleted?.Invoke(this, EventArgs.Empty);
                 await OnLevelCompleteAsync().ConfigureAwait(true);
             }
         }
@@ -133,6 +169,7 @@ public sealed partial class BoardViewModel : BaseViewModel
         if (outcome.UnlockedBiome is { } biome)
         {
             StatusText = $"Yeni bolge: {BiomeCatalog.Get(biome).Name}!";
+            BiomeUnlocked?.Invoke(this, biome);
         }
 
         // Interstitial guard: kurallari uygular, silently skip.

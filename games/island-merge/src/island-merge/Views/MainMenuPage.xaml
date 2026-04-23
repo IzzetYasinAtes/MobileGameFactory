@@ -6,7 +6,7 @@
              x:DataType="vm:MainMenuViewModel"
              Title="{Binding Title}"
              BackgroundColor="#0E3B39">
-    <Grid Padding="20" RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="16">
+    <Grid Padding="20" RowDefinitions="Auto,Auto,Auto,Auto,*,Auto" RowSpacing="16">
         <Image Grid.Row="0"
                Source="logo.png"
                HeightRequest="110"
@@ -19,7 +19,15 @@
                TextColor="#C6E0C0"
                HorizontalOptions="Center" />
 
-        <CollectionView Grid.Row="2"
+        <Image Grid.Row="2"
+               x:Name="SelectedPortrait"
+               Source="{Binding SelectedPortraitSource}"
+               HeightRequest="120"
+               WidthRequest="120"
+               Aspect="AspectFit"
+               HorizontalOptions="Center" />
+
+        <CollectionView Grid.Row="3"
                         ItemsSource="{Binding CharacterCarousel}"
                         HorizontalOptions="Center"
                         HeightRequest="140">
@@ -42,7 +50,7 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <VerticalStackLayout Grid.Row="3" Spacing="10" VerticalOptions="Center">
+        <VerticalStackLayout Grid.Row="4" Spacing="10" VerticalOptions="Center">
             <Border StrokeShape="RoundRectangle 18"
                     Stroke="#F5E6A3"
                     StrokeThickness="1"
@@ -61,6 +69,6 @@
             <Button Text="Ayarlar" Command="{Binding OpenSettingsCommand}" BackgroundColor="#1F7A6C" TextColor="White" />
         </VerticalStackLayout>
 
-        <Label Grid.Row="4" Text="v1.0" HorizontalOptions="Center" TextColor="#7FA29B" FontSize="12" />
+        <Label Grid.Row="5" Text="v1.0" HorizontalOptions="Center" TextColor="#7FA29B" FontSize="12" />
     </Grid>
 </ContentPage>

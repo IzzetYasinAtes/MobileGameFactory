@@ -26,6 +26,9 @@ public sealed partial class MainMenuViewModel : BaseViewModel
     [ObservableProperty]
     private int _energy;
 
+    [ObservableProperty]
+    private string _selectedPortraitSource = "character_momo.png";
+
     public ObservableCollection<CharacterCardVm> CharacterCarousel { get; } = new();
 
     public MainMenuViewModel(IGameSession session, ISelectedCharacterStore characters)
@@ -109,10 +112,17 @@ public sealed partial class MainMenuViewModel : BaseViewModel
 
     private void SyncCarouselSelection()
     {
-        var active = _characters.GetSelected();
+        var active = _characters.HasSelection ? _characters.GetSelected() : CharacterId.Momo;
         foreach (var c in CharacterCarousel)
         {
             c.IsSelected = c.Id == active;
         }
+        SelectedPortraitSource = active switch
+        {
+            CharacterId.Kasif => "character_kasif.png",
+            CharacterId.Lila => "character_lila.png",
+            CharacterId.Papagan => "character_papagan.png",
+            _ => "character_momo.png",
+        };
     }
 }

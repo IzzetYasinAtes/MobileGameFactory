@@ -1,3 +1,4 @@
+using IslandMerge.Controls;
 using IslandMerge.ViewModels;
 
 namespace IslandMerge.Views;
@@ -5,6 +6,7 @@ namespace IslandMerge.Views;
 public partial class MainMenuPage : ContentPage
 {
     private readonly MainMenuViewModel _vm;
+    private CancellationTokenSource? _idleCts;
 
     public MainMenuPage(MainMenuViewModel vm)
     {
@@ -20,5 +22,19 @@ public partial class MainMenuPage : ContentPage
         {
             await _vm.LoadCommand.ExecuteAsync(null);
         }
+
+        // Idle breath — secili karakter portrait'i sonsuz nefes.
+        _idleCts?.Cancel();
+        _idleCts = new CancellationTokenSource();
+        _ = SpriteAnimator.IdleBreathAnimation(SelectedPortrait, _idleCts.Token);
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+        _idleCts?.Cancel();
+        _idleCts?.Dispose();
+        _idleCts = null;
+        SpriteAnimator.StopAll(SelectedPortrait);
     }
 }

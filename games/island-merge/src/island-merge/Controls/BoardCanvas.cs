@@ -51,10 +51,62 @@ public sealed class BoardCanvas : SKCanvasView
     private int? _dragStartCell;
     private int? _dragEndCell;
 
+    // Per-cell pop progress (0..1 bell curve). Scale = 1 + progress * 0.2.
+    // MAUI Animation API ile driven — UI thread, 60 FPS safe.
+    private readonly Dictionary<int, double> _popProgress = new();
+
     public BoardCanvas()
     {
         EnableTouchEvents = true;
         Touch += OnTouch;
+    }
+
+    /// <summary>
+    /// Merge basarisinda ilgili tile icin pop animation tetikler.
+    /// Scale 1.0 -> 1.2 -> 1.0, 200ms toplam. Stagger icin startDelayMs.
+    /// MAUI Animation API kullanir (DispatcherTimer degil).
+    /// </summary>
+    public void TriggerPop(int cellIndex, int startDelayMs = 0)
+    {
+        if (cellIndex < 0 || cellIndex >= BoardConstants.CellCount)
+        {
+            return;
+        }
+
+        var key = $"board_pop_{cellIndex}";
+        this.AbortAnimation(key);
+
+        void Run()
+        {
+            var anim = new Animation();
+            // 0..0.5 progress: 0 -> 1 (cubic out); 0.5..1 progress: 1 -> 0 (cubic in).
+            anim.Add(0, 0.5, new Animation(v => SetPopProgress(cellIndex, v), 0, 1, Easing.CubicOut));
+            anim.Add(0.5, 1, new Animation(v => SetPopProgress(cellIndex, v), 1, 0, Easing.CubicIn));
+            anim.Commit(
+                this,
+                key,
+                length: 200,
+                finished: (_, __) =>
+                {
+                    _popProgress.Remove(cellIndex);
+                    InvalidateSurface();
+                });
+        }
+
+        if (startDelayMs > 0)
+        {
+            Dispatcher.DispatchDelayed(TimeSpan.FromMilliseconds(startDelayMs), Run);
+        }
+        else
+        {
+            Run();
+        }
+    }
+
+    private void SetPopProgress(int cellIndex, double progress)
+    {
+        _popProgress[cellIndex] = progress;
+        InvalidateSurface();
     }
 
     private void OnTouch(object? sender, SKTouchEventArgs e)
@@ -171,16 +223,38 @@ public sealed class BoardCanvas : SKCanvasView
             var pad = Math.Min(cellW, cellH) * 0.1f;
             var rect = new SKRect(left + pad, top + pad, left + cellW - pad, top + cellH - pad);
 
+            // Pop animation: scale 1.0 -> 1.2 based on bell curve progress.
+            var scale = 1.0f;
+            if (_popProgress.TryGetValue(cell.Index, out var p))
+            {
+                scale = 1.0f + (float)p * 0.2f;
+            }
+
             using var fill = new SKPaint
             {
                 Color = ColorForChain(cell.Chain, cell.Tier),
                 IsAntialias = true,
                 Style = SKPaintStyle.Fill,
             };
+
+            var saved = 0;
+            if (scale != 1.0f)
+            {
+                saved = canvas.Save();
+                canvas.Translate(rect.MidX, rect.MidY);
+                canvas.Scale(scale, scale);
+                canvas.Translate(-rect.MidX, -rect.MidY);
+            }
+
             canvas.DrawRoundRect(rect, 12, 12, fill);
 
             var label = $"{ChainGlyph(cell.Chain)}{cell.Tier}";
             canvas.DrawText(label, rect.MidX, rect.MidY + labelFont.Size * 0.35f, SKTextAlign.Center, labelFont, textPaint);
+
+            if (scale != 1.0f)
+            {
+                canvas.RestoreToCount(saved);
+            }
         }
 
         // Drag overlay

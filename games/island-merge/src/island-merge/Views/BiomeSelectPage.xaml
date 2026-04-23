@@ -13,7 +13,8 @@
                         StrokeShape="RoundRectangle 16"
                         Stroke="#1F7A6C"
                         StrokeThickness="1"
-                        HeightRequest="140">
+                        HeightRequest="140"
+                        Loaded="BiomeBorder_Loaded">
                     <Grid>
                         <Image Source="{Binding ImageSource}" Aspect="AspectFill" />
                         <BoxView BackgroundColor="#80000000" />
