@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IslandMerge.ViewModels"
+             xmlns:m="clr-namespace:IslandMerge.Models"
+             x:Class="IslandMerge.Views.BiomeSelectPage"
+             x:DataType="vm:BiomeSelectViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#0E3B39">
+    <CollectionView ItemsSource="{Binding Biomes}" Margin="12">
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="m:BiomeDefinition">
+                <Frame Margin="0,6" Padding="16" CornerRadius="16" BackgroundColor="#14524C" BorderColor="#1F7A6C">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold" TextColor="White" />
+                            <Label Text="{Binding FirstLevel, StringFormat='Seviye {0}+'}"
+                                   FontSize="12" TextColor="#C6E0C0" />
+                        </VerticalStackLayout>
+                        <Label Grid.Column="1" Text="Yakinda"
+                               TextColor="#F5A623" FontAttributes="Bold" VerticalOptions="Center"
+                               IsVisible="{Binding Unlocked, Converter={StaticResource InverseBoolConverter}}" />
+                    </Grid>
+                </Frame>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentPage>

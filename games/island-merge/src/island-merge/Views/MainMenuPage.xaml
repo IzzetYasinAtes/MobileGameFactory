@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IslandMerge.ViewModels"
+             x:Class="IslandMerge.Views.MainMenuPage"
+             x:DataType="vm:MainMenuViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#0E3B39">
+    <Grid Padding="24" RowDefinitions="Auto,*,Auto" RowSpacing="24">
+        <VerticalStackLayout Grid.Row="0" Spacing="4">
+            <Label Text="Mini Kasifler" FontSize="36" FontAttributes="Bold" TextColor="#F5E6A3" HorizontalOptions="Center" />
+            <Label Text="Kayip Adanin Sirri" FontSize="16" TextColor="#C6E0C0" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="1" Spacing="12" VerticalOptions="Center">
+            <Frame BackgroundColor="#14524C" BorderColor="#F5E6A3" CornerRadius="18" Padding="16">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="{Binding BiomeName, StringFormat='Bolge: {0}'}" TextColor="White" FontSize="16" />
+                    <Label Text="{Binding CurrentLevel, StringFormat='Seviye {0}'}" TextColor="#C6E0C0" FontSize="14" />
+                    <Label Text="{Binding Energy, StringFormat='Enerji: {0}'}" TextColor="#F5E6A3" FontSize="14" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button Text="Oyna" Command="{Binding PlayCommand}" BackgroundColor="#F5A623" TextColor="#1B1B1B" FontAttributes="Bold" />
+            <Button Text="Bolge Sec" Command="{Binding OpenBiomeSelectCommand}" BackgroundColor="#1F7A6C" TextColor="White" />
+            <Button Text="Magaza" Command="{Binding OpenShopCommand}" BackgroundColor="#1F7A6C" TextColor="White" />
+            <Button Text="Ayarlar" Command="{Binding OpenSettingsCommand}" BackgroundColor="#1F7A6C" TextColor="White" />
+        </VerticalStackLayout>
+
+        <Label Grid.Row="2" Text="v1.0" HorizontalOptions="Center" TextColor="#7FA29B" FontSize="12" />
+    </Grid>
+</ContentPage>

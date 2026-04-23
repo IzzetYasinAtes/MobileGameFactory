@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IslandMerge.ViewModels"
+             xmlns:svc="clr-namespace:IslandMerge.Services"
+             x:Class="IslandMerge.Views.ShopPage"
+             x:DataType="vm:ShopViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#0E3B39">
+    <Grid RowDefinitions="Auto,*,Auto" Padding="12">
+        <Label Grid.Row="0" Text="Magaza" FontSize="24" FontAttributes="Bold" TextColor="White" />
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Products}" Margin="0,12">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="svc:IapProduct">
+                    <Frame Margin="0,6" Padding="14" CornerRadius="14" BackgroundColor="#14524C" BorderColor="#1F7A6C">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="{Binding Title}" FontSize="16" FontAttributes="Bold" TextColor="White" />
+                                <Label Text="{Binding Description}" FontSize="12" TextColor="#C6E0C0" />
+                                <Label Text="{Binding PriceDisplay}" FontSize="12" TextColor="#F5A623" />
+                            </VerticalStackLayout>
+                            <Button Grid.Column="1"
+                                    Text="Satin Al"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShopViewModel}}, Path=PurchaseCommand}"
+                                    CommandParameter="{Binding .}"
+                                    BackgroundColor="#F5A623"
+                                    TextColor="#1B1B1B" />
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Label Grid.Row="2" Text="{Binding StatusText}" TextColor="#F5E6A3" />
+    </Grid>
+</ContentPage>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IslandMerge.ViewModels"
+             x:Class="IslandMerge.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#0E3B39">
+    <VerticalStackLayout Padding="20" Spacing="20">
+        <Label Text="Ayarlar" FontSize="24" FontAttributes="Bold" TextColor="White" />
+
+        <VerticalStackLayout Spacing="6">
+            <Label Text="Ses Seviyesi" TextColor="#C6E0C0" />
+            <Slider Minimum="0" Maximum="100" Value="{Binding Volume}" />
+            <Label Text="{Binding Volume, StringFormat='Ses: {0}'}" TextColor="White" FontSize="12" />
+        </VerticalStackLayout>
+
+        <HorizontalStackLayout Spacing="12">
+            <Label Text="Sessiz" TextColor="White" VerticalOptions="Center" />
+            <Switch IsToggled="{Binding Muted}" />
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="12">
+            <Label Text="Titresim" TextColor="White" VerticalOptions="Center" />
+            <Switch IsToggled="{Binding HapticsEnabled}" />
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="12">
+            <Label Text="Dil" TextColor="White" VerticalOptions="Center" />
+            <Label Text="{Binding Language}" TextColor="#F5A623" VerticalOptions="Center" />
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>
