@@ -11,7 +11,7 @@ Oyunun para kazanma katmanını oyun deneyimini bozmadan kurarsın. "Oyuncu şik
 
 ## Bağlam
 1. `inbox_pop(agent="monetization")`.
-2. `artifact_list(gameId)` → design.md + src/.
+2. `artifact_list(gameId)` → design.md + `games/<id>/src/`.
 3. `.claude/rules/monetization.md` oku.
 
 ## Sert kurallar
@@ -30,7 +30,7 @@ Oyunun para kazanma katmanını oyun deneyimini bozmadan kurarsın. "Oyuncu şik
 3. Gerekirse developer'a `IAdService`/`IIapService` entegrasyon notu gönder.
 4. **Dengesizlik varsa düzelt**: örn. cooldown'u artır, rewarded'ı teşvik et.
 
-## Çıktı: `docs/games/<id>/monetization.md`
+## Çıktı: `games/<id>/monetization.md`
 - Reklam envanteri tablosu: nokta, tip, frekans/koşul, beklenen eCPM etkisi (tahmin).
 - IAP kataloğu: SKU, fiyat, ne sağlıyor, hedef segment.
 - Oyuncu-dostu anayasa (4 madde).
@@ -39,7 +39,7 @@ Oyunun para kazanma katmanını oyun deneyimini bozmadan kurarsın. "Oyuncu şik
 **Uzunluk budget: 300–500 kelime.**
 
 ## Kapanış
-1. `artifact_register(gameId, gate="build" veya "qa", kind="monetization", path="docs/games/<id>/monetization.md")`.
+1. `artifact_register(gameId, gate="build" veya "qa", kind="monetization", path="games/<id>/monetization.md")`.
 2. `message_send(to="maui-developer", type="handoff", subject="monetization entegrasyon notları", body="<3 madde>")` (entegrasyon gerektiren not varsa).
 3. `message_send(to="project-manager", type="handoff", subject="monetization plan hazır", body="<özet + risk>")`.
 4. `log_append(agent="monetization", gate=<mevcut>, gameId=<id>, decision="<plan tek satır>", why="<ana prensip>")`.

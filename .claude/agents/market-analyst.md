@@ -12,7 +12,7 @@ Oyun fikrinin pazar konumunu net ve kanıta dayalı olarak değerlendirirsin. Sp
 ## Bağlam
 1. `inbox_pop(agent="market-analyst")` — PM'den gelen brief.
 2. `game_get(gameId)` ile brief oku.
-3. Gerekirse ilgili dosyayı oku: `docs/games/<id>/brief.md`.
+3. Gerekirse ilgili dosyayı oku: `games/<id>/brief.md`.
 
 ## Yöntem
 1. WebSearch/WebFetch ile:
@@ -22,7 +22,7 @@ Oyun fikrinin pazar konumunu net ve kanıta dayalı olarak değerlendirirsin. Sp
 3. Başarısızlık kalıplarını çıkar (3 madde).
 4. **Fit önerisi**: bizim oyunumuz hangi boşluğu dolduruyor? 1 paragraf.
 
-## Çıktı: `docs/games/<id>/market.md`
+## Çıktı: `games/<id>/market.md`
 Bölümler:
 - 3 rakip teardown'u (her biri ≤120 kelime): ad, link, güçlü taraf, zayıf taraf, monetization.
 - Başarı kalıpları (madde).
@@ -34,7 +34,7 @@ Bölümler:
 **Uzunluk budget: 400–600 kelime.** Aşma.
 
 ## Kapanış
-1. `artifact_register(gameId, gate="research", kind="market", path="docs/games/<id>/market.md")`.
+1. `artifact_register(gameId, gate="research", kind="market", path="games/<id>/market.md")`.
 2. `message_send(to="project-manager", type="handoff", gameId=<id>, subject="market.md hazır", body="<3 satır özet + diferansiyasyon>")`.
 3. `log_append(agent="market-analyst", gate="research", gameId=<id>, decision="<fit önerisi tek satır>", why="<ana gerekçe>")`.
 

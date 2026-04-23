@@ -16,14 +16,14 @@ Paralel koşabilen: `monetization` build + qa ile eş zamanlı; `mcp-infrastruct
 **Agent**: PM
 **Skill**: `game-intake`
 **Girdi**: sahibin 1-2 cümle fikri.
-**Çıktı**: `docs/games/<id>/brief.md`, DB kaydı.
+**Çıktı**: `games/<id>/brief.md`, DB kaydı.
 **Done**: `gate_advance("research")` + `log_append`.
 
 ## Kapı 2: Research
 **Agent**: market-analyst
 **Skill**: `research-sprint`
 **Girdi**: brief.md
-**Çıktı**: `docs/games/<id>/market.md` (400–600 kelime).
+**Çıktı**: `games/<id>/market.md` (400–600 kelime).
 **Done kriteri**:
 - 3 rakip teardown.
 - Fit önerisi.
@@ -34,7 +34,7 @@ Paralel koşabilen: `monetization` build + qa ile eş zamanlı; `mcp-infrastruct
 **Agent**: game-designer
 **Skill**: `design-brief`
 **Girdi**: brief.md + market.md
-**Çıktı**: `docs/games/<id>/design.md` (600–900 kelime).
+**Çıktı**: `games/<id>/design.md` (600–900 kelime).
 **Done kriteri**:
 - Core loop 1 cümle.
 - Progression + difficulty tanımlı.
@@ -46,7 +46,7 @@ Paralel koşabilen: `monetization` build + qa ile eş zamanlı; `mcp-infrastruct
 **Agent**: maui-developer (primary) + monetization (yan)
 **Skill**: —
 **Girdi**: design.md
-**Çıktı**: `src/<id>/` MAUI solution, Android Release build yeşil, unit testler yeşil.
+**Çıktı**: `games/<id>/src/<id>/` MAUI projesi + `games/<id>/src/<id>.Tests/` xUnit, Android Release build yeşil, unit testler yeşil.
 **Done kriteri**:
 - `dotnet build -f net10.0-android -c Release` ✓.
 - xUnit testler ✓.

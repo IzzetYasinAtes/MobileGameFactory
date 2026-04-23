@@ -31,10 +31,10 @@ Keyword araştırması: benzer rakip (market.md'den) + Google Play keyword tool 
   - iOS 5.5": 4 min (backward compat, opsiyonel).
 - Promo video 30 s (opsiyonel, önerilir).
 
-Her asset için `docs/games/<id>/release.md` içinde path sütunu.
+Her asset için `games/<id>/release.md` içinde path sütunu.
 
 ### 3. Legal / policy
-- Privacy policy: `docs/games/<id>/privacy.md` → host edilecek (GitHub Pages, Netlify free, vb).
+- Privacy policy: `games/<id>/privacy.md` → host edilecek (GitHub Pages, Netlify free, vb).
 - Data safety (Android) / Privacy nutrition (iOS) formu — SDK başına topladığı veri işaretle.
 - Age rating questionnaire — tek seferlik.
 - Terms of service (opsiyonel, küçük oyun için privacy yeterli).
@@ -66,12 +66,12 @@ Mac erişimi yoksa `release.md` içinde:
 - İlk 7 gün monitoring planı.
 
 ### 7. release.md yaz
-Path: `docs/games/<id>/release.md` — `templates/release-checklist.md`'den.
+Path: `games/<id>/release.md` — `templates/release-checklist.md`'den.
 Uzunluk 500–800 kelime.
 
 ### 8. Kapı kapanış
 ```
-artifact_register(gameId, gate="release", kind="release", path="docs/games/<id>/release.md")
+artifact_register(gameId, gate="release", kind="release", path="games/<id>/release.md")
 message_send(to="project-manager", type="handoff", subject="release hazır", body="<android ready + ios status + eksik asset sayısı>")
 log_append(agent="store-release", gate="release", gameId=<id>, decision="android ship-ready", why="<eksik varsa belirt>")
 ```

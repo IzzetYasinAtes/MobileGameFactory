@@ -7,7 +7,7 @@ Bu dosya sahibin PM'e nasıl brief vereceğinin somut örneğidir. `/new-game` k
 /new-game "Flappy tarzı bir kuş oyunu ama 15 saniyelik turlar, neon retro estetik, hızlı combo sistemi"
 ```
 
-## PM'in ürettiği brief (docs/games/neon-bird-15s/brief.md)
+## PM'in ürettiği brief (games/neon-bird-15s/brief.md)
 
 ```markdown
 # Game Brief — Neon Bird 15s

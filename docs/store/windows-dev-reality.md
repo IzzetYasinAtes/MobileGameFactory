@@ -82,7 +82,7 @@ Cloud yaklaşımı: CI/build için ekonomik (haftada 1-2 ship), full-time dev i�
 ## PM agent nasıl yönetir
 
 Release kapısında PM:
-1. `docs/games/<id>/release.md` içinde "iOS build path" ve "iOS ship path" iki ayrı satır.
+1. `games/<id>/release.md` içinde "iOS build path" ve "iOS ship path" iki ayrı satır.
 2. Mac erişim durumunu kaydet: `game_meta_patch(gameId, '{"iosStatus":"ready"|"blocked_mac_needed"}')`.
 3. Sahibe net rapor:
    - "Android v1.0.0 ship-ready."

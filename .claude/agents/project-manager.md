@@ -29,7 +29,7 @@ Sahip (kullanıcı) ile **tek konuşan** agent sensin. Diğer 7 uzmanı sen yön
 - `/new-game "<fikir>"` geldiğinde:
   1. Slug üret (örn: "neon-bird-15s"). Tek kelime-tire, ≤30 karakter.
   2. `game_create(id, title, brief)`.
-  3. `docs/games/<id>/brief.md` dosyasını `templates/game-brief.md` şablonundan doldur.
+  3. `games/<id>/brief.md` dosyasını `templates/game-brief.md` şablonundan doldur.
   4. `artifact_register(gameId, gate="intake", kind="brief", path=...)`.
   5. `gate_advance(gameId, "research")` + `log_append(...)`.
   6. Market Analyst'i Task tool ile çağır, research kapısını başlat.

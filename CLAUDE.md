@@ -15,17 +15,17 @@ Otonom mobil oyun üretim sistemi. Tek insan (sahip) + bir agent organizasyonu. 
 | Project Manager | `.claude/agents/project-manager.md` | opus | Tek kullanıcı temas noktası. Karar verir, sıralar, ship eder. |
 | Market Analyst | `.claude/agents/market-analyst.md` | sonnet | Rakip + trend analizi, fit önerisi. |
 | Game Designer | `.claude/agents/game-designer.md` | sonnet | Core loop, progression, difficulty, monetization noktaları. |
-| MAUI Developer | `.claude/agents/maui-developer.md` | opus | Oyunu `/src/<game-id>/` altında kodlar. |
+| MAUI Developer | `.claude/agents/maui-developer.md` | opus | Oyunu `games/<id>/src/<id>/` altında kodlar. |
 | QA Tester | `.claude/agents/qa-tester.md` | sonnet | Test matrisi, edge case, bug listesi. |
 | Monetization | `.claude/agents/monetization.md` | sonnet | Reklam/IAP yerleşim dengesi. |
 | Store/Release | `.claude/agents/store-release.md` | sonnet | Metadata, ASO, platform submission. |
 | Infrastructure | `.claude/agents/mcp-infrastructure.md` | sonnet | `/ops/` protokolü, log, state bakımı. |
 
 ## Workflow kapıları (gate'ler) — bkz. `.claude/workflows/new-game-lifecycle.md`
-1. **Intake** — sahibin brief'i → PM `ops/state/<id>.json` + `docs/games/<id>/brief.md` yazar.
+1. **Intake** — sahibin brief'i → PM `ops/state/<id>.json` + `games/<id>/brief.md` yazar.
 2. **Research** — Market Analyst `market.md` üretir; PM kapı onayı.
 3. **Design** — Game Designer `design.md` üretir; PM kapı onayı.
-4. **Build** — MAUI Developer `src/<id>/` üretir; Monetization + Infrastructure girdi verir.
+4. **Build** — MAUI Developer `games/<id>/src/<id>/` üretir; Monetization + Infrastructure girdi verir.
 5. **QA** — QA Tester `qa.md` üretir, bug'lar kapatılır.
 6. **Release hazırlık** — Store/Release `release.md` + asset checklist üretir.
 7. **Ship** — PM imzalar, `game/<id>-v1.0.0` tag'ler, sahibe tek paragraf özet yazar.
@@ -78,17 +78,21 @@ PM asla kapı atlamaz. PM bağımlı olmayan kapıları paralel çalıştırabil
 - `/status` — PM aktif tüm oyunları ve bulundukları kapıyı özetler.
 - `/ship <game-id>` — PM oyunu ship'e kadar sürer.
 
-## Oyun başına dizin yerleşimi
+## Oyun başına dizin yerleşimi — her oyun tek klasörde
 ```
-docs/games/<id>/
+games/<id>/
   brief.md        design.md       market.md
   qa.md           monetization.md release.md
-src/<id>/         MAUI projesi (+ .Tests)
+  privacy.md      (release'de eklenir)
+  assets/         icons / screenshots / audio / images / fonts (raw kaynaklar)
+  src/
+    <id>/         MAUI ana projesi (csproj + kod + Resources/)
+    <id>.Tests/   xUnit
 ```
-Oyun state'i ve kapı durumu `ops/factory.db` içinde; dosyaya JSON state yazılmaz. Üretilen her dosya `artifact_register` ile oyuna bağlanır.
+Oyunla ilgili **her şey** `games/<id>/` altında. Brief'ten release checklist'e, koddan asset'lere. Oyun state'i + kapı durumu `ops/factory.db` içinde; dosyaya JSON state yazılmaz. Üretilen her dosya `artifact_register` ile oyuna bağlanır.
 
 ## Kök çözüm dosyası
-Tek bir `MobileGameFactory.sln` kök dizinde — çift tıklayınca Visual Studio tüm klasörleri (`.claude`, `docs`, `templates`, `src`, `tools/mcp-server`) solution folder olarak gösterir. MAUI Developer yeni oyun projesi oluşturduğunda `dotnet sln MobileGameFactory.sln add src/<id>/<id>/<id>.csproj` ile kök sln'e ekler.
+Tek `MobileGameFactory.sln` kök dizinde — çift tıklayınca Visual Studio tüm klasörleri (`.claude`, `docs`, `templates`, `games`, `tools/mcp-server`) solution folder olarak gösterir. MAUI Developer yeni oyun projesi oluşturduğunda `dotnet sln MobileGameFactory.sln add games/<id>/src/<id>/<id>.csproj` ile kök sln'e ekler.
 
 ## Eskalasyon
 Agent tıkandığında → `message_send(to="project-manager", type="escalation", subject=..., body=<somut çözüm önerisi>)`. PM aynı kapı içinde karar verir, `log_append` ile karar kaydı atar.

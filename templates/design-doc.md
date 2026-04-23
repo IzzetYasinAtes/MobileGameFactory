@@ -40,7 +40,7 @@
 |---|---|---|---|
 | {{nokta}} | RA / IA / IAP | {{ne zaman}} | {{ne veriyor}} |
 
-Detay: monetization agent kapanışında `docs/games/<id>/monetization.md`.
+Detay: monetization agent kapanışında `games/<id>/monetization.md`.
 
 ## Retention hook
 - **D1**: {{}}

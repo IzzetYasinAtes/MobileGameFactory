@@ -51,12 +51,12 @@ MAUI özelinde bilinmesi gerekenler:
 - Platform-özgü API ihtiyacı (vibration, keyboard, vb).
 
 ### 8. design.md yaz
-Path: `docs/games/<id>/design.md` — `templates/design-doc.md` şablonundan.
+Path: `games/<id>/design.md` — `templates/design-doc.md` şablonundan.
 Uzunluk 600–900 kelime.
 
 ### 9. Kapı kapanış
 ```
-artifact_register(gameId, gate="design", kind="design", path="docs/games/<id>/design.md")
+artifact_register(gameId, gate="design", kind="design", path="games/<id>/design.md")
 message_send(to="project-manager", type="handoff", subject="design.md hazır", body="<core + 1 risk>")
 log_append(agent="game-designer", gate="design", gameId=<id>, decision="<core loop>", why="<ana seçim>")
 ```

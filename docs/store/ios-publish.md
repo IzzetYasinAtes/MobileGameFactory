@@ -40,7 +40,7 @@ Apple Developer → Profiles → + → App Store → App ID seç → Dist cert s
 
 ### Archive
 ```bash
-dotnet publish src/<id>/<id>/<id>.csproj \
+dotnet publish games/<id>/src/<id>/<id>.csproj \
   -f net10.0-ios \
   -c Release \
   -p:RuntimeIdentifier=ios-arm64 \

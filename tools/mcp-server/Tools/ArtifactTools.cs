@@ -22,7 +22,7 @@ public static class ArtifactTools
         [Description("Oyun id")] string gameId,
         [Description("Kapi: intake|research|design|build|qa|release")] string gate,
         [Description($"Tur")] string kind,
-        [Description("Repo-goreli yol (orn: docs/games/neon-bird/design.md)")] string path,
+        [Description("Repo-goreli yol (orn: games/neon-bird/design.md)")] string path,
         [Description("Kisa not")] string? note = null)
     {
         if (Array.IndexOf(Kinds, kind) < 0)

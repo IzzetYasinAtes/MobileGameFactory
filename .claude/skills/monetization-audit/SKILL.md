@@ -6,7 +6,7 @@ description: Monetization agent'ın iş akışı. Build çıktısındaki para ka
 # Skill: monetization-audit
 
 ## Ön koşul
-- `artifact_list(gameId)` → design.md + src/ path'leri.
+- `artifact_list(gameId)` → design.md + `games/<id>/src/` path'leri.
 - `.claude/rules/monetization.md` okundu.
 
 ## Adımlar
@@ -48,7 +48,7 @@ message_send(to="maui-developer", type="handoff", subject="monetization entegras
 ```
 
 ### 6. monetization.md yaz
-Path: `docs/games/<id>/monetization.md`. Uzunluk 300–500 kelime.
+Path: `games/<id>/monetization.md`. Uzunluk 300–500 kelime.
 Bölümler: Reklam envanteri tablosu, IAP kataloğu, oyuncu-dostu anayasa, risk uyarıları.
 
 ### 7. Kapı kapanış

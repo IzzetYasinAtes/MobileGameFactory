@@ -22,7 +22,7 @@ game_create(id=<slug>, title=<okunabilir başlık>, brief=<1-2 cümle ham fikir>
 ```
 
 ### 3. brief.md yaz
-`templates/game-brief.md` şablonunu kopyala → `docs/games/<id>/brief.md`:
+`templates/game-brief.md` şablonunu kopyala → `games/<id>/brief.md`:
 - Başlık
 - Ham fikir (değişmeden)
 - Yorumlanmış niyet (PM'in 2-3 cümle özetlemesi)
@@ -33,7 +33,7 @@ game_create(id=<slug>, title=<okunabilir başlık>, brief=<1-2 cümle ham fikir>
 
 ### 4. artifact_register
 ```
-artifact_register(gameId, gate="intake", kind="brief", path="docs/games/<id>/brief.md")
+artifact_register(gameId, gate="intake", kind="brief", path="games/<id>/brief.md")
 ```
 
 ### 5. Research kapısına geç

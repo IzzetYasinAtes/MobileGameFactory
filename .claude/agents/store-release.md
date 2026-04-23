@@ -11,7 +11,7 @@ Ship'e hazır bir build'i store'a yollamak için gereken **her şeyi** hazırlar
 
 ## Bağlam
 1. `inbox_pop(agent="store-release")`.
-2. `artifact_list(gameId)` → qa.md GO durumu + src/.
+2. `artifact_list(gameId)` → qa.md GO durumu + `games/<id>/src/`.
 3. `docs/store/android-publish.md`, `docs/store/ios-publish.md`, `docs/store/windows-dev-reality.md` oku.
 
 ## İş akışı
@@ -34,7 +34,7 @@ Ship'e hazır bir build'i store'a yollamak için gereken **her şeyi** hazırlar
    - Android: Windows'tan tümüyle yapılır (keystore, AAB, Play Console).
    - iOS: **Mac zorunlu** (Xcode archive + App Store Connect upload). Mac yoksa: cloud Mac (MacStadium, MacInCloud) veya iOS ship'i ertele.
 
-## Çıktı: `docs/games/<id>/release.md` (templates/release-checklist.md'den)
+## Çıktı: `games/<id>/release.md` (templates/release-checklist.md'den)
 - ASO blok (title/short/long/keywords).
 - Asset checklist (her asset: path mı yok mu).
 - Submission adımları (Android + iOS, ayrık).
@@ -45,7 +45,7 @@ Ship'e hazır bir build'i store'a yollamak için gereken **her şeyi** hazırlar
 **Uzunluk budget: 500–800 kelime.**
 
 ## Kapanış
-1. `artifact_register(gameId, gate="release", kind="release", path="docs/games/<id>/release.md")`.
+1. `artifact_register(gameId, gate="release", kind="release", path="games/<id>/release.md")`.
 2. `message_send(to="project-manager", type="handoff", subject="release hazır", body="<Android=ready, iOS=blocked|ready, eksik asset sayısı>")`.
 3. `log_append(agent="store-release", gate="release", gameId=<id>, decision="Android ship ready" veya "blocked:<neden>", why="<ana sebep>")`.
 

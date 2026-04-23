@@ -49,7 +49,7 @@ body: "Core: 1-tap flap, 15s tur. Risk: monetization noktası 2 çok agresif, de
 ```
 
 Body 400 char'ı aşıyorsa:
-- Uzun kısmı dosyaya yaz (örn: `docs/games/<id>/design.md`).
+- Uzun kısmı dosyaya yaz (örn: `games/<id>/design.md`).
 - `artifact_register` çağır.
 - Mesaj body'de yalnızca 3 satır özet + dosya path'i ipucu.
 

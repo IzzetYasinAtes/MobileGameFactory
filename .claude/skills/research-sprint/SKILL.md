@@ -50,9 +50,9 @@ Bizim fikrimiz bu pazarın neresinde? 1 paragraf:
 - Her biri: ne, nasıl uygulanır, hangi rakibe karşı avantaj.
 
 ### 6. market.md yaz ve kaydet
-Path: `docs/games/<id>/market.md`. Uzunluk 400–600 kelime.
+Path: `games/<id>/market.md`. Uzunluk 400–600 kelime.
 ```
-artifact_register(gameId, gate="research", kind="market", path="docs/games/<id>/market.md")
+artifact_register(gameId, gate="research", kind="market", path="games/<id>/market.md")
 ```
 
 ### 7. Kapı kapanış

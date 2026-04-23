@@ -20,7 +20,7 @@ Play Console: App integrity → Google Play App Signing'i **etkinleştir**. Uplo
 
 ### 3. AAB build
 ```bash
-dotnet publish src/<id>/<id>/<id>.csproj \
+dotnet publish games/<id>/src/<id>/<id>.csproj \
   -f net10.0-android \
   -c Release \
   -p:AndroidPackageFormats=aab \

@@ -90,8 +90,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "store", "store", "{A000000A
 		docs\store\windows-dev-reality.md = docs\store\windows-dev-reality.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "games", "games", "{A000000B-0000-0000-0000-000000000001}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{A000000C-0000-0000-0000-000000000001}"
 	ProjectSection(SolutionItems) = preProject
 		templates\game-brief.md = templates\game-brief.md
@@ -107,7 +105,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{A0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ops", "ops", "{A000000E-0000-0000-0000-000000000001}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A000000F-0000-0000-0000-000000000001}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "games", "games", "{A000000F-0000-0000-0000-000000000001}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -145,7 +143,6 @@ Global
 		{A0000007-0000-0000-0000-000000000001} = {A0000002-0000-0000-0000-000000000001}
 		{A0000009-0000-0000-0000-000000000001} = {A0000008-0000-0000-0000-000000000001}
 		{A000000A-0000-0000-0000-000000000001} = {A0000008-0000-0000-0000-000000000001}
-		{A000000B-0000-0000-0000-000000000001} = {A0000008-0000-0000-0000-000000000001}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9F4E5A1C-8B2D-4E3A-A0F1-123456789ABC}

@@ -6,7 +6,7 @@ description: QA Tester agent'ın qa kapısında izlediği playbook. Test matrisi
 # Skill: qa-pass
 
 ## Ön koşul
-- `artifact_list(gameId)` → design.md + src/ hazır.
+- `artifact_list(gameId)` → design.md + `games/<id>/src/` hazır.
 - `.claude/rules/testing.md` okundu.
 - Android Release build eldede (APK/AAB).
 
@@ -40,7 +40,7 @@ En az 1 low-end cihazda:
 - Frame drop sayısı (Profiler) kabul edilebilir mi?
 
 ### 5. Bug formatı
-Her bug `docs/games/<id>/qa.md` içinde testing.md formatına uygun. P0/P1/P2 öncelik.
+Her bug `games/<id>/qa.md` içinde testing.md formatına uygun. P0/P1/P2 öncelik.
 
 ### 6. GO/NO-GO kararı
 `.claude/rules/testing.md` kriterleri:
@@ -50,7 +50,7 @@ Her bug `docs/games/<id>/qa.md` içinde testing.md formatına uygun. P0/P1/P2 ö
 
 ### 7. Kapı kapanış
 ```
-artifact_register(gameId, gate="qa", kind="qa", path="docs/games/<id>/qa.md")
+artifact_register(gameId, gate="qa", kind="qa", path="games/<id>/qa.md")
 message_send(to="maui-developer", type="handoff", subject="bug listesi", body="<P0/P1 sayısı>")   # sadece bug varsa
 message_send(to="project-manager", type="handoff", subject="qa: GO|NO-GO", body="<sayılar>")
 log_append(agent="qa-tester", gate="qa", gameId=<id>, decision="GO|NO-GO", why="<rakamsal kanıt>")

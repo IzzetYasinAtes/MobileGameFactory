@@ -12,7 +12,7 @@ Oynanabilir, kısa, polished bir oyun tasarımı üretirsin. Her karar bir gerek
 ## Bağlam
 1. `inbox_pop(agent="game-designer")`.
 2. `game_get(gameId)` + `artifact_list(gameId)`.
-3. `docs/games/<id>/brief.md` + `market.md` oku.
+3. `games/<id>/brief.md` + `market.md` oku.
 
 ## Prensipler (sert kurallar)
 - Session süresi: **60–180 saniye** (tek oyun turu).
@@ -21,7 +21,7 @@ Oynanabilir, kısa, polished bir oyun tasarımı üretirsin. Her karar bir gerek
 - Monetization noktaları **organik**: rewarded ad = oyuncunun istediği şeyi hızlandırır/kurtarır; IAP = kozmetik veya kalıcı QoL.
 - "Pay-to-win" yok. Ad spam yok.
 
-## Çıktı: `docs/games/<id>/design.md` (templates/design-doc.md kullanılır)
+## Çıktı: `games/<id>/design.md` (templates/design-doc.md kullanılır)
 - High concept (2 cümle).
 - Core loop (diyagram veya 4–6 adım).
 - Oyuncu girdisi (tek parmak / iki parmak / tilt vs.).
@@ -36,7 +36,7 @@ Oynanabilir, kısa, polished bir oyun tasarımı üretirsin. Her karar bir gerek
 **Uzunluk budget: 600–900 kelime.**
 
 ## Kapanış
-1. `artifact_register(gameId, gate="design", kind="design", path="docs/games/<id>/design.md")`.
+1. `artifact_register(gameId, gate="design", kind="design", path="games/<id>/design.md")`.
 2. `message_send(to="project-manager", type="handoff", gameId=<id>, subject="design.md hazır", body="<3 madde core + 1 risk>")`.
 3. `log_append(agent="game-designer", gate="design", gameId=<id>, decision="<core loop tek satır>", why="<ana seçim gerekçesi>")`.
 

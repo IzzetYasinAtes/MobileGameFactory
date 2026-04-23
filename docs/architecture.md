@@ -59,21 +59,23 @@ Sahip -- | Claude Code (CLI)  |  /new-game, /status, /ship
 - `.claude/rules/*.md` — 6 normatif kural dosyası.
 - `.claude/workflows/new-game-lifecycle.md` — 7 kapı şeması.
 
-## Her oyunun dosya ayak izi
+## Her oyunun dosya ayak izi — tek klasör
 ```
-docs/games/<id>/
-  brief.md       (intake)
-  market.md      (research)
-  design.md      (design)
-  monetization.md (build/qa)
-  qa.md          (qa)
-  release.md     (release)
-  privacy.md     (release; dış host'a yüklenir)
-src/<id>/
-  <id>.sln
-  <id>/               MAUI shared project
-  <id>.Tests/         xUnit
+games/<id>/
+  brief.md              (intake)
+  market.md             (research)
+  design.md             (design)
+  monetization.md       (build/qa)
+  qa.md                 (qa)
+  release.md            (release)
+  privacy.md            (release; dış host'a yüklenir)
+  assets/               raw kaynak asset (icon PSD, ses kaynağı, font)
+    icons/ screenshots/ audio/ images/ fonts/
+  src/
+    <id>/               MAUI ana projesi
+    <id>.Tests/         xUnit
 ```
+Oyunla ilgili **her şey** `games/<id>/` altında. Kök `MobileGameFactory.sln` MAUI csproj'ları `games/<id>/src/<id>/<id>.csproj` yolunda referanslar.
 
 ## State şeması (DB)
 - **games**: id, title, gate, brief, meta_json, timestamps.
