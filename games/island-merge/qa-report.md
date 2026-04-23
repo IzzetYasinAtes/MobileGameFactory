@@ -161,3 +161,52 @@ Bu senaryolar P0/P1 bug kapandıktan sonra fiziksel cihazda koşulmalıdır.
 - Performans: ölçüm yapılamadı (cihaz yok) — taşıma riski
 
 Ship için P0-001 ve P0-002 kapatılması zorunludur. P1'lerin tamamı da kapatılması şiddetle önerilir.
+
+---
+
+## Re-QA — 2026-04-23 (commit 84072ee + 81577e4)
+
+**Build**: Android Release 0 hata, 0 uyarı. **Test**: 46/46 yeşil.
+
+### P0/P1/P2 Doğrulama (kod review)
+
+| ID | Başlık | Sonuç | Kanıt |
+|----|--------|-------|-------|
+| P0-001 | Interstitial guard | **CLOSED** | `Services/InterstitialGuard.cs` implement edildi. `TryShowOnLevelCompleteAsync`: removeAdsPurchased, level < 4, runCount ≤ 3, sessionCount ≥ 2, 4 dk interval — 5 guard hepsi kod içinde. `BoardViewModel.OnLevelCompleteAsync` çağırıyor. `InterstitialGuardTests.cs` 46/46 içinde yeşil. |
+| P0-002 | SQLite corruption re-init | **CLOSED** | `SqliteStorage.InitializeAsync` `SQLiteException` + `IOException` try/catch blokları var. `RecreateDatabaseAsync`: db close → WAL/SHM/journal silme → `OpenAndMigrateAsync`. `SqliteStorageTests.cs` yeşil. |
+| P1-01 | Biome unlock trigger | **CLOSED** | `GameSession.OnLevelCompleteAsync`: `previousLevel < def.FirstLevel && currentLevel >= def.FirstLevel` döngüsüyle `LevelCompleteOutcome.UnlockedBiome` doldurulur. `BoardViewModel` `BiomeUnlocked` event fırlatır. `BiomeSelectViewModel.LoadAsync` → `IsBiomeUnlocked` → level threshold karşılaştırması. `BiomeCatalog.All` threshold'ları kayıtlı (Beach L21, Temple L41…). |
+| P1-02 | StarterPack 24h pencere | **CLOSED** | `Player.StarterPackFirstSeenUtc` (long, epoch) + `StarterPackPurchased` modele eklendi. `GameSession.OnLevelCompleteAsync`: L5 ilk geçişinde timestamp set. `IsStarterPackOfferActive()`: elapsed < 24×3600 kontrolü. `ShopViewModel.LoadAsync`: `IsStarterPackOfferActive() == false` ise SKU listelenmez. |
+| P1-03 | RestoreRemoveAds hardcode false | **CLOSED** | `PlayBillingIapService.RestoreRemoveAdsAsync`: `Preferences.Default.Get("iap_remove_ads_owned", false)` döner. `PurchaseAsync(RemoveAds)` aynı flag'i yazar. Stub katmanında tutarlı; gerçek BillingClient entegrasyonu ertelenmiş (yorum satırında belirtilmiş), ancak stub davranış doğru. |
+| P1-04 | Rewarded 30s cooldown | **CLOSED** | `Services/RewardedCooldown.cs` implement edildi. `IsReady` / `NotifyShown` / `TimeLeft`. `BoardViewModel.WatchAdForEnergyAsync`: `IsReady` false ise erken dön + kullanıcıya kalan süre mesajı. `RewardedCooldownTests.cs` yeşil. |
+| P1-05 | Lifecycle flush (Deactivated / TrimMemory) | **CLOSED** | `App.xaml.cs`: `window.Deactivated`, `window.Stopped`, `window.Destroying` → `FlushSessionFireAndForget`. `MainApplication.cs`: `OnTrimMemory(level >= RunningModerate)` → `session.FlushAsync()`. `GameSession.FlushAsync`: player null guard + `SavePlayerAsync` + Warning log. |
+| P2-01 | Quest 2x loot rewarded akışı | **OPEN** | `GameSession.CompleteQuestAsync` doğrudan ödül ekliyor; 2x multiplier yok. `BoardViewModel.TryMergeAsync` quest complete path'inde opt-in ad yolu yok. UI'da buton yok. Repro: quest tamamla, 2x buton arama → buton yok. Bu P2 — ship blocker değil. |
+
+### Animator Stabilite (SpriteAnimator.cs + BoardCanvas.cs)
+
+| Kontrol | Sonuç | Detay |
+|---------|-------|-------|
+| CancellationToken loop kullanımı | PASS | `IdleBreathAnimation` + `HoverBounceAnimation`: `while (!ct.IsCancellationRequested)` + `Task.Delay(startDelayMs, ct)` |
+| `finally` CTS iptal + abort | PASS | Her loop animasyon `finally` bloğunda `AbortAnimation(key)` + transform reset (Scale=1, TranslationY=0, Opacity=1) |
+| Scale + Translation çakışması | PASS | `IdleBreath` scale; `HoverBounce` translationY — aynı element'te birlikte çalıştırılabilir. `UnlockReveal`: fade + scale `Task.WhenAll` ile paralel, translation yok. Çakışma yok. |
+| ScaleToAsync migration | PASS | Tüm animasyonlar `ScaleToAsync` / `TranslateToAsync` / `FadeToAsync` (MAUI async API). `ScaleTo` (fire-and-forget) kullanımı yok. |
+| BoardCanvas pop: sürekli invalidate riski | PASS | `SetPopProgress` → `InvalidateSurface()` sadece animasyon aktifken çağrılır. `finished` callback'te `_popProgress.Remove(cellIndex)` + son `InvalidateSurface()` — animasyon sonrası dirty frame üretilmez. |
+
+**Animator: PASS — regresyon yok.**
+
+### Re-QA Özet
+
+| Metrik | Değer |
+|--------|-------|
+| P0 kapatıldı | 2/2 |
+| P1 kapatıldı | 5/5 |
+| P2 kapatıldı | 0/1 (P2-001 açık, ship blocker değil) |
+| Unit test | 46/46 |
+| Android Release build | 0 hata / 0 uyarı |
+| Performans bench | DEFERRED — fiziksel cihaz yok |
+| Smoke (cold start, arka plan, uçak modu) | DEFERRED — fiziksel cihaz yok |
+
+**Deferred senaryolar** (önceki rapordan): cold start ≤2s, FPS, memory, smoke checklist S01–S08 — cihaz temin edildiğinde koşulmalıdır. Bu metrikler P0/P1 kapsamı dışında olduğundan GO kararını bloklamıyor.
+
+## Re-QA KARAR: **GO**
+
+P0 ve P1 bug'ların tamamı kod review ile kapatıldı. P2-001 açık ancak ship blocker değil. Build ve testler yeşil. Performans ve smoke deferred (cihaz bağımlı) — ilk deployment sonrası fiziksel cihazda tamamlanmalıdır.

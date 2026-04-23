@@ -219,3 +219,102 @@ iOS metadata, keywords ve screenshots bu belgedeki Android içeriklerinden uyarl
 4. App icon + feature graphic (final render)
 
 **Karar**: DELAY — yukarıdaki 4 eksik giderilene kadar.
+
+---
+
+## Final Release Package — 2026-04-23
+
+### AAB Durumu — SHIP BLOCKER
+
+**AAB konumu**: `games/island-merge/src/island-merge/bin/Release/net10.0-android/com.mobilegamefactory.islandmerge-Signed.aab`
+**Boyut**: ~40.9 MB (hedef ≤40 MB — SINIRDA; trim sonrası kontrol et)
+
+**İmzalama durumu**: DEBUG KEYSTORE — SHIP BLOCKER.
+csproj'da `AndroidSigningKeyStore` tanımlı değil. .NET MAUI Release build, keystore belirtilmediğinde Xamarin/MAUI debug keystore (`~/.android/debug.keystore`) ile imzalar. Bu AAB Play Console'a yüklenemez; Play Store yalnızca production keystore ile imzalı AAB kabul eder.
+
+**Blocker çözümü** — owner tarafından yapılacak:
+
+1. Keystore oluştur (JDK keytool mevcut: `C:\Program Files\Android\openjdk\jdk-21.0.8\bin\keytool.exe`):
+   ```
+   "C:\Program Files\Android\openjdk\jdk-21.0.8\bin\keytool.exe" ^
+     -genkey -v ^
+     -keystore %USERPROFILE%\keys\island-merge.keystore ^
+     -alias islandmerge ^
+     -keyalg RSA -keysize 2048 -validity 10000
+   ```
+2. Keystore'u csproj'a bağla (`Release` PropertyGroup'una ekle):
+   ```xml
+   <AndroidSigningKeyStore>$(USERPROFILE)\keys\island-merge.keystore</AndroidSigningKeyStore>
+   <AndroidSigningKeyAlias>islandmerge</AndroidSigningKeyAlias>
+   <AndroidSigningKeyPass>$(KEYSTORE_PASS)</AndroidSigningKeyPass>
+   <AndroidSigningStorePass>$(KEYSTORE_PASS)</AndroidSigningStorePass>
+   ```
+3. Release AAB'yi yeniden derle:
+   ```
+   dotnet publish games/island-merge/src/island-merge/island-merge.csproj -f net10.0-android -c Release -p:AndroidPackageFormats=aab
+   ```
+4. Play App Signing'i etkinleştir (Play Console → App integrity) — Google upload key yönetir, production keystore yedeğini güvenli sakla.
+
+**VersionCode**: 1 | **VersionName**: 1.0.0 | **Target SDK**: 34 (API 34) | **Min SDK**: 24
+
+---
+
+### Play Store Asset Checklist
+
+| Asset | Gerekli boyut | Mevcut dosya | Durum |
+|-------|---------------|--------------|-------|
+| App icon | 512×512 PNG | `assets/icon-512x512.png` (placeholder) | PLACEHOLDER — owner final render gerekli |
+| Feature graphic | 1024×500 PNG | `assets/feature-graphic-1024x500.png` (placeholder) | PLACEHOLDER — owner final render gerekli |
+| Screenshot 1 — MainMenu | 1080×1920 | `assets/screenshot-mainmenu.png` (1440×753 desktop) | BOYUT YANLIS — portrait crop gerekli |
+| Screenshot 2 — CharacterSelect | 1080×1920 | `assets/screenshot-characterselect.png` (placeholder) | PLACEHOLDER |
+| Screenshot 3 — BoardPage | 1080×1920 | `assets/screenshot-board.png` (placeholder) | PLACEHOLDER |
+| Screenshot 4 — BiomeSelectPage | 1080×1920 | `assets/screenshot-biomeselect.png` (placeholder) | PLACEHOLDER |
+| Screenshot 5 — ShopPage | 1080×1920 | `assets/screenshot-shop.png` (placeholder) | PLACEHOLDER |
+| Privacy policy URL | HTTPS aktif sayfa | `games/island-merge/privacy.md` (local) | BLOCKER — GitHub Pages host gerekli |
+| Content rating | IARC anketi | Cevaplar release.md'de | Owner Play Console'da doldurur |
+| Data safety | Play Console formu | Veri tablosu release.md'de | Owner Play Console'da doldurur |
+| AAB signed | Production keystore | `com.mobilegamefactory.islandmerge-Signed.aab` | BLOCKER — debug keystore |
+| Target API 34 | API 34 | csproj SupportedOSPlatformVersion 24.0 | Kontrol: manifest TargetSdkVersion=34 |
+| 64-bit (arm64-v8a) | Zorunlu | Release build dahil | Varsayılan OK |
+
+**Screenshot notu**: Mevcut `screenshot-mainmenu.png` 1440×753 (Windows desktop landscape). Play Store için 1080×1920 portrait gerekli. Placeholder'lar store'a yüklenebilir boyutta oluşturuldu; final görseller device/emulator'dan alınmalı. Android Emülatör (portrait 1080×1920) veya gerçek cihaz önerilir.
+
+---
+
+### Submission Adımları — Android (Google Play Console)
+
+**Ön koşul**: Production keystore oluşturuldu, AAB yeniden imzalandı, privacy.md GitHub Pages'te yayında.
+
+1. **play.google.com/console** → "Uygulama oluştur"
+   - Varsayılan dil: Türkçe | Ad: `Mini Kaşifler: Kayıp Ada` | Tür: Oyun | Ücretsiz
+2. **Mağaza girişi** → Türkçe + İngilizce listing'leri bu dosyadan yapıştır (ASO Blogu bölümü)
+3. **Ana mağaza varlıkları** → App icon, Feature graphic, 5 screenshot yükle
+4. **Uygulama içeriği** → Privacy policy URL gir → Data safety doldur → Content rating anketi doldur (IARC) → Reklamlar: Evet, IAP: Evet
+5. **Sürüm** → Dahili test → AAB yükle → Sürüm notları (TR/EN):
+   - TR: `Mini Kaşifler v1.0.0 — İlk sürüm. Merge bulmaca macerası, 5 bölge, 100 seviye. Çevrimdışı oynanır.`
+   - EN: `Mini Explorers v1.0.0 — First release. Merge puzzle adventure, 5 biomes, 100 levels. Fully offline.`
+6. **Dahili test** → En az 3 test kullanıcısı → 1-2 gün izle → Crash rate < %1 ise devam
+7. **Kapalı test (Closed testing)** → 2024+ Google kuralı: yeni uygulama için kapalı testte 12 gün / 20 tester zorunlu (üretim öncesi)
+8. **Aşamalı yayın** → %10 → 3 gün bekle → %25 → 3 gün → %100
+
+---
+
+### Blocker Özeti (Owner Aksiyonları)
+
+| # | Blocker | Etki | Owner adımı |
+|---|---------|------|-------------|
+| 1 | Production keystore yok | AAB Play Console'a yüklenemez | keytool komutu yukarıda; keystore'u güvenli yedekle |
+| 2 | Privacy policy URL aktif değil | Submission reddedilir | `games/island-merge/privacy.md` → GitHub Pages publish |
+| 3 | Screenshots placeholder | Mağaza görseli yetersiz | Android Emülatör 1080×1920 portrait'ten gerçek ekran görüntüsü al |
+| 4 | Icon + Feature graphic placeholder | Mağaza kalitesi düşük | Tasarımcıya veya AI görüntü aracına ver; brand-keyart.png + character-lila.png kaynak |
+| 5 | Kapalı test kullanıcıları | Google 2024+ yeni uygulama kuralı | 20 test kullanıcısı davet et (arkadaş/aile), 12 gün bekle |
+
+**iOS**: BLOCKED — Mac erişimi yok. Hedef Q3 2026.
+
+---
+
+### Windows → iOS Durumu
+
+Mac erişimi yok. Xcode archive + IPA imzalama Windows'ta yapılamaz. iOS v1.1 için öneri: Android v1.0 ship sonrası MacInCloud saatlik kiralama ile Xcode build + TestFlight + App Store Connect upload (~20-40 USD/oturum).
+
+**Karar**: Android v1.0 ship — 3 owner-actionable blocker çözülünce. iOS backlog Q3 2026.
