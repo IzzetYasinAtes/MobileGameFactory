@@ -1,1 +1,52 @@
 # MobileGameFactory
+
+Tek kişilik mobil oyun üretim hattı. Sen 1–2 cümle fikir verirsin; Project Manager agent araştırır, tasarlar, yaptırır, test ettirir, yayına hazırlar.
+
+## Nasıl kullanılır
+
+```
+/new-game "Suçlu kuş, 15 saniyelik turlar, neon retro estetik"
+```
+
+PM devreye girer. Bundan sonra tek muhatabın PM. Diğer agent'leri PM görevlendirir.
+
+## Proje iskeleti
+- `CLAUDE.md` — sistem anayasası (ilk bu okunur)
+- `.claude/agents/` — 8 agent (PM + 7 uzman)
+- `.claude/rules/` — kod / MAUI / performans / monetization / test / log kuralları
+- `.claude/skills/` — çağrılabilir playbook'lar
+- `.claude/commands/` — `/new-game`, `/status`, `/ship`
+- `.claude/workflows/new-game-lifecycle.md` — 7 kapı süreci
+- `docs/` — mimari, mcp-protocol, araştırma, store rehberleri
+- `ops/factory.db` — SQLite (agent mesajları + state + kararlar; runtime, gitignored)
+- `tools/mcp-server/` — C# / .NET 10 MCP sunucusu (agent iletişimi ve state)
+- `src/<game-id>/` — her oyun kendi MAUI solution'u
+- `templates/` — oyun brief, design doc, QA checklist, release checklist
+- `examples/sample-game-brief.md` — nasıl brief yazacağının örneği
+
+## İlk kurulum (tek seferlik)
+```bash
+dotnet build tools/mcp-server -c Release
+```
+Claude Code `.mcp.json` üzerinden sunucuyu otomatik başlatır. Build sonrası oturum yeniden açılırsa `factory` MCP server tool'ları hazır olur.
+
+## Windows gerçeği (kısa)
+- **Android:** Windows'ta tümüyle build + test (emulator + fiziksel cihaz).
+- **iOS build + submit:** macOS zorunlu (Xcode + App Store Connect). Windows'tan remote Mac ya da cloud Mac olmadan iOS ship mümkün değil.
+- PM bu durumu her oyunun release kapısında sana bildirir ve "Android-only ship" ya da "Mac gerekli" kararını netleştirir.
+
+Detay: `docs/store/windows-dev-reality.md`.
+
+## İlk oyunu nasıl başlatırım
+1. `/new-game "<fikir>"` yaz — istersen referans görsel yapıştır.
+2. PM brief'i `docs/games/<id>/brief.md` olarak kaydeder, `ops/state/<id>.json` açar.
+3. Kapılar ilerledikçe PM sana tek paragraflık özet verir; sen onaylar veya yön değiştirirsin.
+4. Ship kapısında PM `game/<id>-v1.0.0` tag'ini atar ve store submission checklist'ini sunar.
+
+## Kurallar (özet)
+- PM sana soru sormaz, karar verir.
+- Agent'lar arası gereksiz konuşma yok; sadece kapı-seviyesi karar loglanır.
+- Her oyun küçük, hızlı, rewarded-ad dostu, IAP opsiyonel.
+- Backend, cloud, external DB yok. Sadece yerel SQLite.
+
+Sistemi tam anlamak için `CLAUDE.md` dosyasını oku.

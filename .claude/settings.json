@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "defaultMode": "bypassPermissions",
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf ~/*)",
+      "Bash(rm -rf $HOME)",
+      "Bash(rm -rf $HOME/*)",
+      "Bash(rm -rf C:/)",
+      "Bash(rm -rf C:/*)",
+      "Bash(rm -rf /c/*)",
+      "Bash(rm -rf D:/)",
+      "Bash(rm -rf D:/*)",
+      "Bash(sudo rm:*)",
+      "Bash(git push --force origin main*)",
+      "Bash(git push -f origin main*)",
+      "Bash(git push --force origin master*)",
+      "Bash(git push -f origin master*)",
+      "Bash(git reset --hard origin/main*)",
+      "Bash(git reset --hard origin/master*)",
+      "Bash(gh repo delete:*)",
+      "Bash(gh auth logout:*)"
+    ]
+  },
+  "includeCoAuthoredBy": true
+}

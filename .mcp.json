@@ -1,0 +1,16 @@
+{
+  "_aciklama": "MobileGameFactory'nin kendi MCP sunucusu (C# / .NET 10). Agent iletisimi, task state, loglar ve artifact'ler SQLite uzerinde tutulur. Detay: tools/mcp-server/README.md ve docs/mcp-protocol.md.",
+  "mcpServers": {
+    "factory": {
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "tools/mcp-server/MobileGameFactory.Mcp.csproj",
+        "-c",
+        "Release"
+      ],
+      "env": {}
+    }
+  }
+}

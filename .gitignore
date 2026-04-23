@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Claude Code personal/local settings (per-user, not committed)
+.claude/settings.local.json
+
+# MobileGameFactory MCP server runtime DB (sema kod icinde otomatik kurulur)
+ops/factory.db
+ops/factory.db-*
+
 # User-specific files
 *.rsuser
 *.suo
