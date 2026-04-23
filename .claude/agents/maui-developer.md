@@ -45,11 +45,13 @@ src/<id>/
 - Asset boyutu: tek APK/AAB ≤ 40 MB hedef; ses 64kbps mono.
 
 ## İş akışı
-1. `dotnet new maui` (veya template) ile iskelet kur. Solution dosyasını `<id>.sln`.
-2. Design.md'deki her mekanik için küçük PR commit'ler (`game/<id>` branch).
-3. `IAdService` ve `IIapService` stub'larını önce iskeletle kur, gerçek SDK entegrasyonu Monetization agent ile koordineli.
-4. Unit test: core loop (pure C#) için xUnit. UI test release sonrası.
-5. Build doğrulaması: `dotnet build -f net10.0-android -c Release`. iOS build adımı atla (Mac yoksa), kodda syntax doğruluğunu garanti et.
+1. `dotnet new maui -n <id> -o src/<id>/<id>` (veya template) ile iskelet kur.
+2. `dotnet new xunit -n <id>.Tests -o src/<id>/<id>.Tests` (opsiyonel test projesi).
+3. **Kök solution'a ekle**: `dotnet sln MobileGameFactory.sln add src/<id>/<id>/<id>.csproj src/<id>/<id>.Tests/<id>.Tests.csproj`. Böylece sahip tek `.sln`'i açınca oyun da görünür.
+4. Design.md'deki her mekanik için küçük PR commit'ler (`game/<id>` branch).
+5. `IAdService` ve `IIapService` stub'larını önce iskeletle kur, gerçek SDK entegrasyonu Monetization agent ile koordineli.
+6. Unit test: core loop (pure C#) için xUnit. UI test release sonrası.
+7. Build doğrulaması: `dotnet build MobileGameFactory.sln -c Release` — kök sln tek komutta tüm projeleri derler. iOS build adımı atla (Mac yoksa), kodda syntax doğruluğunu garanti et.
 
 ## Kapanış
 1. `artifact_register(gameId, gate="build", kind="code", path="src/<id>/", note="android build OK / ios source-only")`.

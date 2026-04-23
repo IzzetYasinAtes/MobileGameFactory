@@ -26,9 +26,12 @@ PM devreye girer. Bundan sonra tek muhatabın PM. Diğer agent'leri PM görevlen
 
 ## İlk kurulum (tek seferlik)
 ```bash
-dotnet build tools/mcp-server -c Release
+dotnet build MobileGameFactory.sln -c Release
 ```
-Claude Code `.mcp.json` üzerinden sunucuyu otomatik başlatır. Build sonrası oturum yeniden açılırsa `factory` MCP server tool'ları hazır olur.
+Kök `.sln` her projeyi derler. Claude Code `.mcp.json` üzerinden MCP sunucusunu otomatik başlatır; build sonrası oturum yeniden açılırsa `factory` MCP server tool'ları hazır olur.
+
+## Visual Studio ile açma
+`MobileGameFactory.sln` dosyasını çift tıkla — VS Solution Explorer'da tüm klasörleri (`.claude`, `docs`, `templates`, `src`, `tools`) solution folder olarak göreceksin. Her yeni oyun `src/<id>/` altında kendi `.csproj`'u olarak eklenir ve otomatik olarak aynı sln'de görünür.
 
 ## Windows gerçeği (kısa)
 - **Android:** Windows'ta tümüyle build + test (emulator + fiziksel cihaz).

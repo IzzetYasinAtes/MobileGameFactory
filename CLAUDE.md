@@ -83,9 +83,12 @@ PM asla kapı atlamaz. PM bağımlı olmayan kapıları paralel çalıştırabil
 docs/games/<id>/
   brief.md        design.md       market.md
   qa.md           monetization.md release.md
-src/<id>/         MAUI solution
+src/<id>/         MAUI projesi (+ .Tests)
 ```
 Oyun state'i ve kapı durumu `ops/factory.db` içinde; dosyaya JSON state yazılmaz. Üretilen her dosya `artifact_register` ile oyuna bağlanır.
+
+## Kök çözüm dosyası
+Tek bir `MobileGameFactory.sln` kök dizinde — çift tıklayınca Visual Studio tüm klasörleri (`.claude`, `docs`, `templates`, `src`, `tools/mcp-server`) solution folder olarak gösterir. MAUI Developer yeni oyun projesi oluşturduğunda `dotnet sln MobileGameFactory.sln add src/<id>/<id>/<id>.csproj` ile kök sln'e ekler.
 
 ## Eskalasyon
 Agent tıkandığında → `message_send(to="project-manager", type="escalation", subject=..., body=<somut çözüm önerisi>)`. PM aynı kapı içinde karar verir, `log_append` ile karar kaydı atar.
