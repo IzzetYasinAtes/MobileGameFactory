@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <ctrl:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <ctrl:BoolToAccentConverter x:Key="BoolToAccentConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

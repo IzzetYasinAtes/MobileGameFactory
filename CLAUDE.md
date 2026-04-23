@@ -1,6 +1,6 @@
 # MobileGameFactory — Sistem Anayasası
 
-Otonom mobil oyun üretim sistemi. Tek insan (sahip) + bir agent organizasyonu. Sahip sadece **Project Manager (PM)** ile konuşur. PM diğer 7 agent'i yönetir.
+Otonom mobil oyun üretim sistemi. Tek insan (sahip) + bir agent organizasyonu. Sahip sadece **Project Manager (PM)** ile konuşur. PM diğer 9 agent'i yönetir.
 
 ## Ürün ekseni (pazarlık konusu değil)
 - Teknoloji: **.NET 10 + .NET MAUI**, Android + iOS hedefi.
@@ -20,12 +20,14 @@ Otonom mobil oyun üretim sistemi. Tek insan (sahip) + bir agent organizasyonu. 
 | Monetization | `.claude/agents/monetization.md` | sonnet | Reklam/IAP yerleşim dengesi. |
 | Store/Release | `.claude/agents/store-release.md` | sonnet | Metadata, ASO, platform submission. |
 | Infrastructure | `.claude/agents/mcp-infrastructure.md` | sonnet | `/ops/` protokolü, log, state bakımı. |
+| Asset Designer | `.claude/agents/asset-designer.md` | sonnet | Karakter + ortam + ikon sprite üretimi (local SD-Turbo). Transparent bg, boyut standartları. |
+| Animator | `.claude/agents/animator.md` | sonnet | Sprite'lara in-game tween animation (SkiaSharp). Idle breath, merge pop, quest reward hareketleri. |
 
 ## Workflow kapıları (gate'ler) — bkz. `.claude/workflows/new-game-lifecycle.md`
 1. **Intake** — sahibin brief'i → PM `ops/state/<id>.json` + `games/<id>/brief.md` yazar.
 2. **Research** — Market Analyst `market.md` üretir; PM kapı onayı.
 3. **Design** — Game Designer `design.md` üretir; PM kapı onayı.
-4. **Build** — MAUI Developer `games/<id>/src/<id>/` üretir; Monetization + Infrastructure girdi verir.
+4. **Build** — MAUI Developer `games/<id>/src/<id>/` üretir; Asset Designer sprite'ları üretir (`games/<id>/assets/` + `Resources/Images/`); Animator hareket ekler; Monetization + Infrastructure girdi verir.
 5. **QA** — QA Tester `qa.md` üretir, bug'lar kapatılır.
 6. **Release hazırlık** — Store/Release `release.md` + asset checklist üretir.
 7. **Ship** — PM imzalar, `game/<id>-v1.0.0` tag'ler, sahibe tek paragraf özet yazar.
@@ -84,9 +86,14 @@ games/<id>/
   brief.md        design.md       market.md
   qa.md           monetization.md release.md
   privacy.md      (release'de eklenir)
-  assets/         icons / screenshots / audio / images / fonts (raw kaynaklar)
+  assets/
+    brand-keyart.png           sahibin referansı
+    raw/                       SD-Turbo ham çıktılar
+    character-<name>.png       asset-designer çıktısı (transparent bg)
+    env-<name>.png             ortam görselleri
+    generate.py                asset-designer üretim scripti
   src/
-    <id>/         MAUI ana projesi (csproj + kod + Resources/)
+    <id>/         MAUI ana projesi (csproj + kod + Resources/Images/ altına sprite kopya)
     <id>.Tests/   xUnit
 ```
 Oyunla ilgili **her şey** `games/<id>/` altında. Brief'ten release checklist'e, koddan asset'lere. Oyun state'i + kapı durumu `ops/factory.db` içinde; dosyaya JSON state yazılmaz. Üretilen her dosya `artifact_register` ile oyuna bağlanır.

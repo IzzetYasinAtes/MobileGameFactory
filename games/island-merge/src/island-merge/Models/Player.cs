@@ -31,4 +31,13 @@ public class Player
     public string LastLoginDateIso { get; set; } = string.Empty;
 
     public bool RemoveAdsPurchased { get; set; }
+
+    /// <summary>
+    /// StarterPack ilk defa gorunur oldugu an (Unix epoch seconds, UTC). 0 ise henuz qualify olmadi.
+    /// 24 saat sonra kapanir.
+    /// </summary>
+    public long StarterPackFirstSeenUtc { get; set; }
+
+    /// <summary>StarterPack satin alindi mi (tek sefer).</summary>
+    public bool StarterPackPurchased { get; set; }
 }

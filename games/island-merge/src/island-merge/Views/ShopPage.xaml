@@ -7,13 +7,28 @@
              x:DataType="vm:ShopViewModel"
              Title="{Binding Title}"
              BackgroundColor="#0E3B39">
-    <Grid RowDefinitions="Auto,*,Auto" Padding="12">
+    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto" Padding="12" RowSpacing="8">
         <Label Grid.Row="0" Text="Magaza" FontSize="24" FontAttributes="Bold" TextColor="White" />
 
-        <CollectionView Grid.Row="1" ItemsSource="{Binding Products}" Margin="0,12">
+        <Border Grid.Row="1"
+                StrokeShape="RoundRectangle 14"
+                BackgroundColor="#14524C"
+                Stroke="#1F7A6C"
+                Padding="10">
+            <HorizontalStackLayout Spacing="12">
+                <Image Source="{Binding SelectedCharacterImage}" HeightRequest="60" WidthRequest="60" Aspect="AspectFit" />
+                <Label Text="Senin ekibin" TextColor="White" VerticalOptions="Center" FontSize="14" />
+            </HorizontalStackLayout>
+        </Border>
+
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Products}" Margin="0,8">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="svc:IapProduct">
-                    <Frame Margin="0,6" Padding="14" CornerRadius="14" BackgroundColor="#14524C" BorderColor="#1F7A6C">
+                    <Border Margin="0,6"
+                            StrokeShape="RoundRectangle 14"
+                            BackgroundColor="#14524C"
+                            Stroke="#1F7A6C"
+                            Padding="14">
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Grid.Column="0">
                                 <Label Text="{Binding Title}" FontSize="16" FontAttributes="Bold" TextColor="White" />
@@ -27,11 +42,17 @@
                                     BackgroundColor="#F5A623"
                                     TextColor="#1B1B1B" />
                         </Grid>
-                    </Frame>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <Label Grid.Row="2" Text="{Binding StatusText}" TextColor="#F5E6A3" />
+        <Button Grid.Row="3"
+                Text="Satin almalari geri yukle"
+                Command="{Binding RestoreCommand}"
+                BackgroundColor="#1F7A6C"
+                TextColor="White" />
+
+        <Label Grid.Row="4" Text="{Binding StatusText}" TextColor="#F5E6A3" />
     </Grid>
 </ContentPage>

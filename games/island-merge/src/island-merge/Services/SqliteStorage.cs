@@ -4,17 +4,17 @@ using SQLite;
 
 namespace IslandMerge.Services;
 
-public sealed class SqliteStorage : IStorage
+public sealed partial class SqliteStorage : IStorage
 {
     private readonly ILogger<SqliteStorage> _logger;
     private readonly string _dbPath;
     private SQLiteAsyncConnection? _db;
 
-    public SqliteStorage(ILogger<SqliteStorage> logger)
+    // Test hook: dosya yolunu disaridan enjekte et.
+    public SqliteStorage(ILogger<SqliteStorage> logger, string dbPath)
     {
         _logger = logger;
-        var dir = FileSystem.AppDataDirectory;
-        _dbPath = Path.Combine(dir, "islandmerge.db3");
+        _dbPath = dbPath;
     }
 
     public async Task InitializeAsync(CancellationToken ct = default)
@@ -24,6 +24,26 @@ public sealed class SqliteStorage : IStorage
             return;
         }
 
+        try
+        {
+            await OpenAndMigrateAsync().ConfigureAwait(false);
+            _logger.LogInformation("SQLite ready at {Path}", _dbPath);
+        }
+        catch (SQLiteException ex)
+        {
+            // P0-002: Corruption / locked-file recovery. Tek seferlik wipe + yeniden olustur.
+            _logger.LogWarning(ex, "SQLite corruption detected at {Path}; recreating database", _dbPath);
+            await RecreateDatabaseAsync().ConfigureAwait(false);
+        }
+        catch (IOException ex)
+        {
+            _logger.LogWarning(ex, "SQLite IO failure at {Path}; recreating database", _dbPath);
+            await RecreateDatabaseAsync().ConfigureAwait(false);
+        }
+    }
+
+    private async Task OpenAndMigrateAsync()
+    {
         _db = new SQLiteAsyncConnection(
             _dbPath,
             SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create | SQLiteOpenFlags.SharedCache);
@@ -34,8 +54,45 @@ public sealed class SqliteStorage : IStorage
         await _db.CreateTableAsync<Item>().ConfigureAwait(false);
         await _db.CreateTableAsync<Quest>().ConfigureAwait(false);
         await _db.CreateTableAsync<FogTile>().ConfigureAwait(false);
+    }
 
-        _logger.LogInformation("SQLite ready at {Path}", _dbPath);
+    private async Task RecreateDatabaseAsync()
+    {
+        try
+        {
+            if (_db is not null)
+            {
+                await _db.CloseAsync().ConfigureAwait(false);
+                _db = null;
+            }
+        }
+        catch (Exception closeEx)
+        {
+            _logger.LogDebug(closeEx, "Ignoring close failure on recovery");
+        }
+
+        TryDeleteDbFile(_dbPath);
+        TryDeleteDbFile(_dbPath + "-wal");
+        TryDeleteDbFile(_dbPath + "-shm");
+        TryDeleteDbFile(_dbPath + "-journal");
+
+        await OpenAndMigrateAsync().ConfigureAwait(false);
+        _logger.LogInformation("SQLite recovered (fresh schema) at {Path}", _dbPath);
+    }
+
+    private static void TryDeleteDbFile(string path)
+    {
+        try
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+        catch
+        {
+            // Silent: recovery best-effort.
+        }
     }
 
     private SQLiteAsyncConnection Db =>

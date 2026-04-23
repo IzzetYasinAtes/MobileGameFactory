@@ -6,20 +6,54 @@
              x:DataType="vm:MainMenuViewModel"
              Title="{Binding Title}"
              BackgroundColor="#0E3B39">
-    <Grid Padding="24" RowDefinitions="Auto,*,Auto" RowSpacing="24">
-        <VerticalStackLayout Grid.Row="0" Spacing="4">
-            <Label Text="Mini Kasifler" FontSize="36" FontAttributes="Bold" TextColor="#F5E6A3" HorizontalOptions="Center" />
-            <Label Text="Kayip Adanin Sirri" FontSize="16" TextColor="#C6E0C0" HorizontalOptions="Center" />
-        </VerticalStackLayout>
+    <Grid Padding="20" RowDefinitions="Auto,Auto,Auto,*,Auto" RowSpacing="16">
+        <Image Grid.Row="0"
+               Source="logo.png"
+               HeightRequest="110"
+               Aspect="AspectFit"
+               HorizontalOptions="Center" />
 
-        <VerticalStackLayout Grid.Row="1" Spacing="12" VerticalOptions="Center">
-            <Frame BackgroundColor="#14524C" BorderColor="#F5E6A3" CornerRadius="18" Padding="16">
-                <VerticalStackLayout Spacing="6">
-                    <Label Text="{Binding BiomeName, StringFormat='Bolge: {0}'}" TextColor="White" FontSize="16" />
-                    <Label Text="{Binding CurrentLevel, StringFormat='Seviye {0}'}" TextColor="#C6E0C0" FontSize="14" />
-                    <Label Text="{Binding Energy, StringFormat='Enerji: {0}'}" TextColor="#F5E6A3" FontSize="14" />
+        <Label Grid.Row="1"
+               Text="Kayip Adanin Sirri"
+               FontSize="14"
+               TextColor="#C6E0C0"
+               HorizontalOptions="Center" />
+
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding CharacterCarousel}"
+                        HorizontalOptions="Center"
+                        HeightRequest="140">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:CharacterCardVm">
+                    <Border StrokeShape="RoundRectangle 14"
+                            Padding="6"
+                            Stroke="{Binding IsSelected, Converter={StaticResource BoolToAccentConverter}}"
+                            StrokeThickness="3"
+                            BackgroundColor="#14524C">
+                        <VerticalStackLayout Spacing="4">
+                            <Image Source="{Binding ImageSource}" HeightRequest="96" WidthRequest="96" Aspect="AspectFit" />
+                            <Label Text="{Binding Name}" FontSize="12" TextColor="White" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <VerticalStackLayout Grid.Row="3" Spacing="10" VerticalOptions="Center">
+            <Border StrokeShape="RoundRectangle 18"
+                    Stroke="#F5E6A3"
+                    StrokeThickness="1"
+                    BackgroundColor="#14524C"
+                    Padding="14">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="{Binding BiomeName, StringFormat='Bolge: {0}'}" TextColor="White" FontSize="15" />
+                    <Label Text="{Binding CurrentLevel, StringFormat='Seviye {0}'}" TextColor="#C6E0C0" FontSize="13" />
+                    <Label Text="{Binding Energy, StringFormat='Enerji: {0}'}" TextColor="#F5E6A3" FontSize="13" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <Button Text="Oyna" Command="{Binding PlayCommand}" BackgroundColor="#F5A623" TextColor="#1B1B1B" FontAttributes="Bold" />
             <Button Text="Bolge Sec" Command="{Binding OpenBiomeSelectCommand}" BackgroundColor="#1F7A6C" TextColor="White" />
@@ -27,6 +61,6 @@
             <Button Text="Ayarlar" Command="{Binding OpenSettingsCommand}" BackgroundColor="#1F7A6C" TextColor="White" />
         </VerticalStackLayout>
 
-        <Label Grid.Row="2" Text="v1.0" HorizontalOptions="Center" TextColor="#7FA29B" FontSize="12" />
+        <Label Grid.Row="4" Text="v1.0" HorizontalOptions="Center" TextColor="#7FA29B" FontSize="12" />
     </Grid>
 </ContentPage>

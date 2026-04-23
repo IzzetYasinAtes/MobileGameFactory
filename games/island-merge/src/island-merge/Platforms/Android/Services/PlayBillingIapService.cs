@@ -41,10 +41,24 @@ public sealed class PlayBillingIapService : IIapService
     {
         _logger.LogInformation("[Play Billing stub] Purchase {Sku}", sku);
         await Task.Delay(300, ct).ConfigureAwait(false);
+
+        // Persist "remove_ads" locally for offline restore tracking (real impl: BillingClient
+        // queryPurchasesAsync + acknowledgePurchase). Stub kayit Preferences'ta yasar.
+        if (sku == IapSku.RemoveAds)
+        {
+            Preferences.Default.Set("iap_remove_ads_owned", true);
+        }
+
         return new IapResult(Success: true, FailReason: null, ReceiptToken: $"play-stub-{sku}-{Guid.NewGuid():N}");
     }
 
-    public Task<bool> RestoreRemoveAdsAsync(CancellationToken ct = default) =>
-        Task.FromResult(false);
+    public Task<bool> RestoreRemoveAdsAsync(CancellationToken ct = default)
+    {
+        // Gercek SDK: BillingClient.queryPurchasesAsync(ProductType.INAPP) → remove_ads varliklarini ara.
+        // Stub: Preferences'a yazilmis flag'i oku.
+        var owned = Preferences.Default.Get("iap_remove_ads_owned", false);
+        _logger.LogInformation("[Play Billing stub] RestoreRemoveAds -> {Owned}", owned);
+        return Task.FromResult(owned);
+    }
 }
 #endif

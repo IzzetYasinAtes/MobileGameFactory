@@ -11,5 +11,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute("biome-select", typeof(BiomeSelectPage));
         Routing.RegisterRoute("shop", typeof(ShopPage));
         Routing.RegisterRoute("settings", typeof(SettingsPage));
+        Routing.RegisterRoute("character-select", typeof(CharacterSelectPage));
     }
 }

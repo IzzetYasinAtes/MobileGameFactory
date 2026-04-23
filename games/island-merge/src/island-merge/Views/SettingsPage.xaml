@@ -9,6 +9,19 @@
     <VerticalStackLayout Padding="20" Spacing="20">
         <Label Text="Ayarlar" FontSize="24" FontAttributes="Bold" TextColor="White" />
 
+        <Border StrokeShape="RoundRectangle 16"
+                BackgroundColor="#14524C"
+                Stroke="#1F7A6C"
+                Padding="12">
+            <HorizontalStackLayout Spacing="14">
+                <Image Source="{Binding SelectedCharacterImage}" HeightRequest="72" WidthRequest="72" Aspect="AspectFit" />
+                <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                    <Label Text="Secilen karakter" TextColor="#C6E0C0" FontSize="12" />
+                    <Label Text="{Binding SelectedCharacterName}" TextColor="White" FontSize="18" FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+        </Border>
+
         <VerticalStackLayout Spacing="6">
             <Label Text="Ses Seviyesi" TextColor="#C6E0C0" />
             <Slider Minimum="0" Maximum="100" Value="{Binding Volume}" />

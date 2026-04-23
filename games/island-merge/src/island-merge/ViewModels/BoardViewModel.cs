@@ -11,6 +11,8 @@ public sealed partial class BoardViewModel : BaseViewModel
 {
     private readonly IGameSession _session;
     private readonly IAdService _adService;
+    private readonly IInterstitialGuard _interstitialGuard;
+    private readonly IRewardedCooldown _rewardedCooldown;
     private readonly ILogger<BoardViewModel> _logger;
 
     [ObservableProperty]
@@ -25,12 +27,22 @@ public sealed partial class BoardViewModel : BaseViewModel
     [ObservableProperty]
     private int _revealedCount;
 
+    [ObservableProperty]
+    private bool _canWatchAdForEnergy = true;
+
     public ObservableCollection<BoardCellVm> Cells { get; } = new();
 
-    public BoardViewModel(IGameSession session, IAdService adService, ILogger<BoardViewModel> logger)
+    public BoardViewModel(
+        IGameSession session,
+        IAdService adService,
+        IInterstitialGuard interstitialGuard,
+        IRewardedCooldown rewardedCooldown,
+        ILogger<BoardViewModel> logger)
     {
         _session = session;
         _adService = adService;
+        _interstitialGuard = interstitialGuard;
+        _rewardedCooldown = rewardedCooldown;
         _logger = logger;
         Title = "Ada";
         for (var i = 0; i < BoardConstants.CellCount; i++)
@@ -50,8 +62,10 @@ public sealed partial class BoardViewModel : BaseViewModel
         try
         {
             await _session.LoadAsync().ConfigureAwait(true);
+            _interstitialGuard.NotifyRunStarted();
             RebuildCells();
             UpdateHud();
+            RefreshAdAvailability();
         }
         finally
         {
@@ -81,6 +95,7 @@ public sealed partial class BoardViewModel : BaseViewModel
                 await _session.CompleteQuestAsync(q.Id).ConfigureAwait(true);
                 StatusText = "Gorev tamam!";
                 UpdateHud();
+                await OnLevelCompleteAsync().ConfigureAwait(true);
             }
         }
     }
@@ -88,17 +103,47 @@ public sealed partial class BoardViewModel : BaseViewModel
     [RelayCommand]
     public async Task WatchAdForEnergyAsync()
     {
+        if (!_rewardedCooldown.IsReady(AdPlacement.EnergyRefill))
+        {
+            var left = _rewardedCooldown.TimeLeft(AdPlacement.EnergyRefill);
+            StatusText = left is { } t
+                ? $"Tekrar izlemek icin {Math.Max(1, (int)t.TotalSeconds)} sn"
+                : "Kisa sure bekleyin";
+            return;
+        }
+
         var result = await _adService.ShowRewardedAsync(AdPlacement.EnergyRefill).ConfigureAwait(true);
         if (result.Rewarded)
         {
+            _rewardedCooldown.NotifyShown(AdPlacement.EnergyRefill);
             await _session.AddRewardedEnergyAsync(50).ConfigureAwait(true);
             UpdateHud();
+            RefreshAdAvailability();
             StatusText = "+50 Enerji";
         }
         else
         {
             StatusText = "Reklam yuklenemedi";
         }
+    }
+
+    private async Task OnLevelCompleteAsync()
+    {
+        var outcome = await _session.OnLevelCompleteAsync().ConfigureAwait(true);
+        if (outcome.UnlockedBiome is { } biome)
+        {
+            StatusText = $"Yeni bolge: {BiomeCatalog.Get(biome).Name}!";
+        }
+
+        // Interstitial guard: kurallari uygular, silently skip.
+        await _interstitialGuard
+            .TryShowOnLevelCompleteAsync(_session.Player.CurrentLevel, _session.Player.RemoveAdsPurchased)
+            .ConfigureAwait(true);
+    }
+
+    private void RefreshAdAvailability()
+    {
+        CanWatchAdForEnergy = _rewardedCooldown.IsReady(AdPlacement.EnergyRefill);
     }
 
     private void RebuildCells()

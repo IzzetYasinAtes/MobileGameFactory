@@ -223,6 +223,7 @@ public sealed class GameSession : IGameSession
             case IapSku.StarterPack:
                 EnergySystem.GrantOvercap(_player, 500);
                 _player.HardCurrency += 200;
+                _player.StarterPackPurchased = true;
                 break;
             case IapSku.RemoveAds:
                 _player.RemoveAdsPurchased = true;
@@ -230,5 +231,83 @@ public sealed class GameSession : IGameSession
         }
 
         await _storage.SavePlayerAsync(_player, ct).ConfigureAwait(false);
+    }
+
+    public async Task<LevelCompleteOutcome> OnLevelCompleteAsync(CancellationToken ct = default)
+    {
+        if (_player is null)
+        {
+            return new LevelCompleteOutcome(0, null);
+        }
+
+        var previousLevel = _player.CurrentLevel;
+        _player.CurrentLevel = previousLevel + 1;
+
+        // Biome unlock tetikleme. Her biyomun FirstLevel esigi gecildiyse unlock.
+        BiomeId? unlocked = null;
+        foreach (var def in BiomeCatalog.All)
+        {
+            var justUnlocked = previousLevel < def.FirstLevel && _player.CurrentLevel >= def.FirstLevel;
+            if (justUnlocked && def.Id != _player.CurrentBiome)
+            {
+                unlocked = def.Id;
+                _logger.LogInformation("Biome {Biome} unlocked at level {Level}", def.Id, _player.CurrentLevel);
+                break;
+            }
+        }
+
+        // StarterPack penceresi: L5 ilk kez asiliyorsa timestamp'i kaydet.
+        if (previousLevel < 5 && _player.CurrentLevel >= 5 && _player.StarterPackFirstSeenUtc == 0)
+        {
+            _player.StarterPackFirstSeenUtc = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        }
+
+        await _storage.SavePlayerAsync(_player, ct).ConfigureAwait(false);
+        return new LevelCompleteOutcome(_player.CurrentLevel, unlocked);
+    }
+
+    public async Task FlushAsync(CancellationToken ct = default)
+    {
+        if (_player is null)
+        {
+            return;
+        }
+
+        try
+        {
+            await _storage.SavePlayerAsync(_player, ct).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Flush failed");
+        }
+    }
+
+    public bool IsBiomeUnlocked(BiomeId biome)
+    {
+        if (_player is null)
+        {
+            return biome == BiomeId.TropicalForest;
+        }
+        var def = BiomeCatalog.Get(biome);
+        return _player.CurrentLevel >= def.FirstLevel;
+    }
+
+    public bool IsStarterPackOfferActive()
+    {
+        if (_player is null)
+        {
+            return false;
+        }
+        if (_player.StarterPackPurchased)
+        {
+            return false;
+        }
+        if (_player.StarterPackFirstSeenUtc == 0)
+        {
+            return false;
+        }
+        var elapsedSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds() - _player.StarterPackFirstSeenUtc;
+        return elapsedSeconds < 24 * 3600;
     }
 }
