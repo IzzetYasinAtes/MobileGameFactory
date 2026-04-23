@@ -256,8 +256,10 @@ public sealed class GameSession : IGameSession
             }
         }
 
-        // StarterPack penceresi: L5 ilk kez asiliyorsa timestamp'i kaydet.
-        if (previousLevel < 5 && _player.CurrentLevel >= 5 && _player.StarterPackFirstSeenUtc == 0)
+        // StarterPack penceresi: ilk level tamamlandiginda 24h sayaci baslat (design: "launch sonrasi 24h").
+        // L5 esigi E2E-002'de L1-4 arasi oyuncunun teklifi hic gormemesine yol aciyordu; ilk run
+        // bitiminde pencere acilir, 24h sonra kapanir.
+        if (_player.StarterPackFirstSeenUtc == 0)
         {
             _player.StarterPackFirstSeenUtc = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }

@@ -17,6 +17,13 @@ public sealed partial class ShopViewModel : BaseViewModel
     [ObservableProperty]
     private string _selectedCharacterImage = "character_momo.png";
 
+    /// <summary>
+    /// Reklamsiz satin alindi mi — UI rozet + "Satin Al" butonunu gizlemek icin.
+    /// E2E-004 fix: satin alma sonrasi gorsel feedback.
+    /// </summary>
+    [ObservableProperty]
+    private bool _isRemoveAdsOwned;
+
     public ObservableCollection<IapProduct> Products { get; } = new();
 
     public ShopViewModel(IIapService iap, IGameSession session, ISelectedCharacterStore characters)
@@ -41,6 +48,7 @@ public sealed partial class ShopViewModel : BaseViewModel
             Products.Clear();
             var products = await _iap.GetProductsAsync().ConfigureAwait(true);
             var starterActive = _session.IsStarterPackOfferActive();
+            var removeAdsOwned = _session.Player.RemoveAdsPurchased;
             foreach (var p in products)
             {
                 if (p.Sku == IapSku.StarterPack && !starterActive)
@@ -48,10 +56,16 @@ public sealed partial class ShopViewModel : BaseViewModel
                     // 24 saat pencere kapali -> listeleme.
                     continue;
                 }
+                if (p.Sku == IapSku.RemoveAds && removeAdsOwned)
+                {
+                    // Zaten alinmis -> listeden kaldir, bunun yerine rozet gosterecegiz.
+                    continue;
+                }
                 Products.Add(p);
             }
 
             SelectedCharacterImage = CharacterImage(_characters.GetSelected());
+            RefreshRemoveAdsState();
         }
         finally
         {
@@ -75,6 +89,7 @@ public sealed partial class ShopViewModel : BaseViewModel
             {
                 StatusText = "Geri yuklenecek satin alma yok";
             }
+            RefreshRemoveAdsState();
         }
         finally
         {
@@ -90,8 +105,9 @@ public sealed partial class ShopViewModel : BaseViewModel
         {
             await _session.ApplyIapAsync(product.Sku).ConfigureAwait(true);
             StatusText = $"{product.Title}: alindi";
-            // Starter pack satin alindiysa listeden cikar.
-            if (product.Sku == IapSku.StarterPack)
+            RefreshRemoveAdsState();
+            // Starter pack veya RemoveAds satin alindiysa liste yenilensin (RemoveAds butonu pasiflesir).
+            if (product.Sku == IapSku.StarterPack || product.Sku == IapSku.RemoveAds)
             {
                 await LoadAsync().ConfigureAwait(true);
             }
@@ -99,6 +115,19 @@ public sealed partial class ShopViewModel : BaseViewModel
         else
         {
             StatusText = $"Basarisiz: {result.FailReason}";
+        }
+    }
+
+    private void RefreshRemoveAdsState()
+    {
+        try
+        {
+            IsRemoveAdsOwned = _session.Player.RemoveAdsPurchased;
+        }
+        catch (InvalidOperationException)
+        {
+            // Session henuz yuklenmediyse default kal.
+            IsRemoveAdsOwned = false;
         }
     }
 

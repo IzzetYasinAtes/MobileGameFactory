@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using IslandMerge.GameLogic;
 using IslandMerge.Models;
 using IslandMerge.Services;
 using Microsoft.Extensions.Logging;
@@ -30,6 +31,14 @@ public sealed partial class BoardViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool _canWatchAdForEnergy = true;
+
+    /// <summary>
+    /// Rewarded energy teklifi, enerji bariyeri aktif hale gelene kadar (L16+) gizli.
+    /// L1-15'te tank her tuketimde dolar, +50 grant net etki sifir olurdu; butonu
+    /// gosterip etkisiz birakmak yerine gizliyoruz (E2E-001 fix).
+    /// </summary>
+    [ObservableProperty]
+    private bool _isEnergyAdVisible;
 
     [ObservableProperty]
     private string _petIconSource = "character_momo.png";
@@ -181,6 +190,7 @@ public sealed partial class BoardViewModel : BaseViewModel
     private void RefreshAdAvailability()
     {
         CanWatchAdForEnergy = _rewardedCooldown.IsReady(AdPlacement.EnergyRefill);
+        IsEnergyAdVisible = EnergySystem.HasCooldown(_session.Player.CurrentLevel);
     }
 
     private void RebuildCells()

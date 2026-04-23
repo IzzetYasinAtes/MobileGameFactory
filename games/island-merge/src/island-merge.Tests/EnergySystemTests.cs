@@ -90,4 +90,20 @@ public class EnergySystemTests
 
         Assert.Equal(550, result);
     }
+
+    /// <summary>
+    /// E2E-001 dokumantasyon testi: tank dolu iken Grant cagrilinca
+    /// net degisim sifir. Bu nedenle L1-15'te rewarded butonu UI'da
+    /// gizleniyor (BoardViewModel.IsEnergyAdVisible).
+    /// </summary>
+    [Fact]
+    public void Grant_OnFullTank_NoChange()
+    {
+        var p = MakePlayer(level: 10, energy: 100, max: 100);
+        var before = p.Energy;
+        var result = EnergySystem.Grant(p, 50);
+
+        Assert.Equal(before, result);
+        Assert.Equal(100, p.Energy);
+    }
 }

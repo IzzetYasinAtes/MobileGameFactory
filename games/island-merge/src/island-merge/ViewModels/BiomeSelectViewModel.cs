@@ -11,12 +11,17 @@ public sealed partial class BiomeSelectViewModel : BaseViewModel
     private const string SeenUnlockedKey = "biome_seen_unlocked";
 
     private readonly IGameSession _session;
+    private readonly IStorage _storage;
+
+    [ObservableProperty]
+    private string _infoText = string.Empty;
 
     public ObservableCollection<BiomeCardVm> Biomes { get; } = new();
 
-    public BiomeSelectViewModel(IGameSession session)
+    public BiomeSelectViewModel(IGameSession session, IStorage storage)
     {
         _session = session;
+        _storage = storage;
         Title = "Bolgeler";
     }
 
@@ -75,6 +80,35 @@ public sealed partial class BiomeSelectViewModel : BaseViewModel
         {
             IsBusy = false;
         }
+    }
+
+    /// <summary>
+    /// Karta tap: kilitli ise bilgi yaz; degilse aktif biyomu degistir ve ana menuye don.
+    /// E2E-003 fix.
+    /// </summary>
+    [RelayCommand]
+    public async Task SelectBiomeAsync(BiomeCardVm? biome)
+    {
+        if (biome is null)
+        {
+            return;
+        }
+
+        if (!biome.IsUnlocked)
+        {
+            InfoText = $"{biome.Name}: seviye {biome.FirstLevel}+ gerektirir";
+            return;
+        }
+
+        var player = _session.Player;
+        if (player.CurrentBiome != biome.Id)
+        {
+            player.CurrentBiome = biome.Id;
+            await _storage.SavePlayerAsync(player).ConfigureAwait(true);
+        }
+
+        InfoText = $"{biome.Name} secildi";
+        await Shell.Current.GoToAsync("//main").ConfigureAwait(true);
     }
 }
 

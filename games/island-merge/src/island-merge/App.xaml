@@ -12,6 +12,7 @@
             </ResourceDictionary.MergedDictionaries>
             <ctrl:InverseBoolConverter x:Key="InverseBoolConverter" />
             <ctrl:BoolToAccentConverter x:Key="BoolToAccentConverter" />
+            <ctrl:NonEmptyToBoolConverter x:Key="NonEmptyToBoolConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
