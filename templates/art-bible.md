@@ -4,7 +4,7 @@
 **Art Director**: {{name}}
 **Tarih**: {{YYYY-MM-DD}}
 **Kapı**: art-bible
-**Versiyon**: 1.0 (kilitli — değişiklik için v2 fork)
+**Versiyon**: 1.0 (kilitli — değişiklik için yeni versiyon fork)
 
 ---
 

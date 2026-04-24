@@ -1,7 +1,5 @@
-# MobileGameFactory — Sistem Anayasası v2
+# MobileGameFactory — Sistem Anayasası
 
-**Reform tarihi**: 2026-04-24
-**Versiyon**: v2 (post-island-merge reform)
 **Motto**: "Ship az, polish çok. Çoğu oyun ölür, azı yaşar."
 
 Otonom mobil oyun üretim sistemi. Tek insan (sahip) + bir agent organizasyonu. Sahip sadece **Project Manager (PM)** ile konuşur. PM, 19 uzman agent'i yönetir.
@@ -9,14 +7,14 @@ Otonom mobil oyun üretim sistemi. Tek insan (sahip) + bir agent organizasyonu. 
 ## Ürün ekseni
 - **Hedef**: AAA kalitede casual/puzzle/merge/match-3/idle mobil oyunlar
 - **Kalite çıtası**: Royal Match / Homescapes / Candy Crush seviyesi polish
-- **Motor seçimi**: bkz. `.claude/rules/engine-selection.md` — **MAUI sadece puzzle/idle/word/card/turn-based için**. Reflex-heavy, particle-yoğun, 3D, AR oyunlar için Unity veya Godot (v2'de opsiyon açık).
+- **Motor seçimi**: bkz. `.claude/rules/engine-selection.md` — **MAUI sadece puzzle/idle/word/card/turn-based için**. Reflex-heavy, particle-yoğun, 3D, AR oyunlar için Unity veya Godot.
 - **Depolama**: yerel-öncelikli (SQLite + opsiyonel Firebase Crashlytics)
 - **Para kazanma**: rewarded-first + zorlayıcı olmayan IAP + ship edilen oyunda minimum live ops (daily + weekly event + monthly battle pass)
 - **Oyunlar**: küçük scope ama polished — 60–180s seans, tekrar oynanabilir, sömürücü değil
 - **Dev ortam**: Windows birincil; iOS için Mac yoksa Bitrise/MacinCloud opsiyon
 - **Kill disiplini**: çoğu prototype öldürülmeli; ship'e azı çıkar (`polish-or-kill` gate)
 
-## Agent listesi (v2 — 19 agent)
+## Agent listesi (19 agent)
 
 ### Core Orchestration (1)
 | Agent | Dosya | Model | Rol |
@@ -62,7 +60,7 @@ Otonom mobil oyun üretim sistemi. Tek insan (sahip) + bir agent organizasyonu. 
 | Localization | `.claude/agents/localization.md` | sonnet | TR + EN + MENA + LATAM terminology, culturalize. |
 | Infrastructure | `.claude/agents/mcp-infrastructure.md` | sonnet | MCP server, state, log bakımı, MGF.UI kütüphanesi. |
 
-## Workflow kapıları (gate'ler) — v2
+## Workflow kapıları (gate'ler)
 
 `.claude/workflows/new-game-lifecycle.md`
 
@@ -184,57 +182,60 @@ Build ve Juice sonrası **60 saniyelik "yine oynar mıyım?" testi**. PM + Game 
 
 ## Kurallar indeksi (normatif)
 - Kod: `.claude/rules/coding.md`
-- Motor seçimi: `.claude/rules/engine-selection.md` **YENİ**
+- Motor seçimi: `.claude/rules/engine-selection.md`
 - MAUI: `.claude/rules/maui.md`
 - Performans: `.claude/rules/performance.md`
-- Juice / Game Feel: `.claude/rules/juice.md` **YENİ**
-- Level Design: `.claude/rules/level-design.md` **YENİ**
-- UX Principles: `.claude/rules/ux-principles.md` **YENİ**
-- Art Direction: `.claude/rules/art-direction.md` **YENİ**
-- Narrative: `.claude/rules/narrative.md` **YENİ**
-- Sound: `.claude/rules/sound.md` **YENİ**
+- Juice / Game Feel: `.claude/rules/juice.md`
+- Level Design: `.claude/rules/level-design.md`
+- UX Principles: `.claude/rules/ux-principles.md`
+- Art Direction: `.claude/rules/art-direction.md`
+- Narrative: `.claude/rules/narrative.md`
+- Sound: `.claude/rules/sound.md`
 - Monetization: `.claude/rules/monetization.md`
-- Live Ops: `.claude/rules/live-ops.md` **YENİ**
-- Growth / ASO: `.claude/rules/growth.md` **YENİ**
-- Analytics: `.claude/rules/analytics.md` **YENİ**
-- Localization: `.claude/rules/localization.md` **YENİ**
+- Live Ops: `.claude/rules/live-ops.md`
+- Growth / ASO: `.claude/rules/growth.md`
+- Analytics: `.claude/rules/analytics.md`
+- Localization: `.claude/rules/localization.md`
 - Test: `.claude/rules/testing.md`
 - Log: `.claude/rules/logging.md`
 
 ## Skill'ler
 `.claude/skills/` — çağrılabilir playbook'lar.
 
-### Mevcut (6)
-- game-intake, research-sprint, design-brief, monetization-audit, qa-pass, release-prep
-
-### Yeni v2 (12+)
-- stage-planning-sprint **YENİ** (sahibin özellikle istediği)
-- art-bible-brief **YENİ**
-- character-design-sprint **YENİ**
-- environment-design-sprint **YENİ**
-- ui-wireframe-sprint **YENİ**
-- animation-spec **YENİ**
-- sound-design-brief **YENİ**
-- narrative-beat **YENİ**
-- juice-audit **YENİ**
-- polish-or-kill-audit **YENİ**
-- aso-sprint **YENİ**
-- creative-ad-spec **YENİ**
-- liveops-event-plan **YENİ**
-- localization-sprint **YENİ**
+- game-intake
+- research-sprint
+- design-brief
+- stage-planning-sprint (sahibin özellikle istediği uçtan uca plan)
+- art-bible-brief
+- character-design-sprint
+- environment-design-sprint
+- ui-wireframe-sprint
+- animation-spec
+- sound-design-brief
+- narrative-beat
+- juice-audit
+- polish-or-kill-audit
+- monetization-audit
+- analytics-spec
+- aso-sprint
+- creative-ad-spec
+- liveops-event-plan
+- localization-sprint
+- qa-pass
+- release-prep
 
 ## Templates
 `templates/` — profesyonel dökümanlar için iskeletler.
 - game-brief.md
 - design-doc.md
-- stage-plan.md **YENİ, ZORUNLU**
-- art-bible.md **YENİ**
-- ui-wireframe.md **YENİ**
-- sound-brief.md **YENİ**
-- narrative-bible.md **YENİ**
-- growth-plan.md **YENİ**
-- liveops-calendar.md **YENİ**
-- analytics-spec.md **YENİ**
+- stage-plan.md (ZORUNLU — her oyun için)
+- art-bible.md
+- ui-wireframe.md
+- sound-brief.md
+- narrative-bible.md
+- growth-plan.md
+- liveops-calendar.md
+- analytics-spec.md
 - qa-checklist.md
 - release-checklist.md
 
@@ -242,7 +243,7 @@ Build ve Juice sonrası **60 saniyelik "yine oynar mıyım?" testi**. PM + Game 
 - `/new-game <fikir>` — sahibin giriş noktası
 - `/status` — PM aktif tüm oyunları ve bulundukları kapıyı özetler
 - `/ship <game-id>` — PM oyunu ship'e kadar sürer
-- `/kill <game-id>` **YENİ** — kill kararı + postmortem + `status=killed`
+- `/kill <game-id>` — kill kararı + postmortem + `status=killed`
 
 ## Kritik metrikler (ship blocker)
 - **D1 retention ≥ 40%** (soft launch testiyle doğrulanır)
@@ -263,7 +264,7 @@ Build ve Juice sonrası **60 saniyelik "yine oynar mıyım?" testi**. PM + Game 
 - Child-directed pay-to-win
 İhlal tespit edilirse → QA NO-GO, ship blocker.
 
-## MCP + plugin genişletme önerileri (v2.1 roadmap)
+## MCP + plugin genişletme önerileri
 - Ludo.ai MCP (game ideation)
 - Figma MCP (UI asset)
 - Stability AI / Replicate MCP (AI asset)

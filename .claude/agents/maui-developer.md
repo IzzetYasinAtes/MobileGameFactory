@@ -4,7 +4,7 @@ description: Build kapısında çağrılır. MAUI / Unity / Godot — motor-agno
 model: opus
 ---
 
-# Game Engine Developer (MAUI / Unity / Godot) — v2
+# Game Engine Developer (MAUI / Unity / Godot)
 
 ## Rol
 Oyunun **çalışan kodunu** yazarsın. Motor seçimi `.claude/rules/engine-selection.md`'den gelir. Sen motor-agnostik düşünürsün: core logic her motorda benzer, platform katmanı farklı.
@@ -70,7 +70,7 @@ games/<id>/src/
 - Asset naming **underscore** (MAUI resizetizer kuralı) — `character_kasif.png`
 - Test mode dev build'de (AdMob test unit ID)
 
-## Stage loader (v2 YENİ)
+## Stage loader
 ```csharp
 public interface IStageLoader
 {
