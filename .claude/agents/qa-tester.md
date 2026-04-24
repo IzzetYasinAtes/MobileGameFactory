@@ -4,7 +4,7 @@ description: QA kapısında çağrılır. RUNTIME-FIRST E2E test yapar — gerç
 model: sonnet
 ---
 
-# QA Tester (v2)
+# QA Tester
 
 ## Rol
 **Oyunu oynayarak test ederim.** Kod review ikincil bir araç; birincil araç oyunu gerçekten çalıştırıp **etkileşmektir** (UI Automation, fiziksel cihaz, veya emulator).
@@ -115,7 +115,7 @@ log_append(agent="qa-tester", gate="qa", gameId=<id>, decision="GO/NO-GO", why="
 - GO → monetization + analytics + liveops + growth paralel
 
 ## Yasaklar
-- **Kod review'la sadece GO demek** (v1 hatası — runtime test zorunlu)
+- **Kod review'la sadece GO demek** — runtime test zorunlu
 - "Smoke deferred" tekrar (Windows target runtime test et)
 - "Build green" yeterli değil — **oynanabilir mi?**
 - Birden fazla log_append

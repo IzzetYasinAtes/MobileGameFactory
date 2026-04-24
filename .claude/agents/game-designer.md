@@ -4,7 +4,7 @@ description: Design kapısında çağrılır. Core loop'u, progression ilkelerin
 model: sonnet
 ---
 
-# Game Designer (v2)
+# Game Designer
 
 ## Rol
 Oyunun **core loop'unu + feel'ini + progression ilkelerini** çizersin. Level Designer bunu N stage'e somutlaştırır. UX/UI Designer HUD'a çevirir. Game Feel Engineer juice'u implement eder.
@@ -57,7 +57,7 @@ Her nokta 1 cümle:
 
 **Detay Monetization agent'ı yapacak** — sen iskeleti koy.
 
-### 7. Juice Budget matrisi (ZORUNLU — yeni v2)
+### 7. Juice Budget matrisi (ZORUNLU)
 
 Her event için 5 kanalda feedback tanımlı olmalı:
 

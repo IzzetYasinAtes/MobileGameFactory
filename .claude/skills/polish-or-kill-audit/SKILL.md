@@ -87,14 +87,14 @@ Hiçbir konsol çıktısı okumadan, sadece **oyuncu olarak**:
 <agent / rule / skill güncellenmeli mi?>
 
 ## Aksiyon öğeleri
-- [ ] <öğrendiğimizi v1 sistemine yansıt>
+- [ ] <öğrendiğimizi sisteme yansıt>
 ```
 
 ## Yasaklar
 - Sevgi körlüğü ("ben yaptım, iyi olmuş") — dürüst ol
 - "Birkaç fix sonra iyi olur" çoklu tekrarı (2 polish round max, sonra kill)
 - Metric numbers olmadan karar ("güzel görünüyor" yeterli değil)
-- Build/test green → otomatik GO sanma (v1 hatası)
+- Build/test green → otomatik GO sanma
 
 ## Done
 - 60s oyun tam
