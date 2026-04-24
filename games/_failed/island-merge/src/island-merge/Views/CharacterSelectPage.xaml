@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IslandMerge.ViewModels"
+             x:Class="IslandMerge.Views.CharacterSelectPage"
+             x:DataType="vm:CharacterSelectViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#0E3B39">
+    <Grid Padding="20" RowDefinitions="Auto,*,Auto" RowSpacing="16">
+        <VerticalStackLayout Grid.Row="0" Spacing="6" HorizontalOptions="Center">
+            <Image Source="logo.png" HeightRequest="84" Aspect="AspectFit" />
+            <Label Text="Kim olmak istersin?" FontSize="22" FontAttributes="Bold"
+                   TextColor="#F5E6A3" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,*"
+              RowDefinitions="*,*"
+              ColumnSpacing="12"
+              RowSpacing="12">
+            <!-- Kasif -->
+            <Border Grid.Row="0" Grid.Column="0"
+                    StrokeShape="RoundRectangle 18" Padding="10" Stroke="#1F7A6C" BackgroundColor="#14524C"
+                    BindingContext="{Binding Characters[0]}"
+                    x:DataType="vm:CharacterCardVm">
+                <VerticalStackLayout Spacing="8">
+                    <Image x:Name="PortraitKasif" Source="{Binding ImageSource}" HeightRequest="140" Aspect="AspectFit" />
+                    <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+                    <Label Text="{Binding Description}" FontSize="12" TextColor="#C6E0C0" HorizontalOptions="Center" />
+                    <Button Text="Sec"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CharacterSelectViewModel}}, Path=ChooseCommand}"
+                            CommandParameter="{Binding .}"
+                            BackgroundColor="#F5A623" TextColor="#1B1B1B" FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Border>
+            <!-- Lila -->
+            <Border Grid.Row="0" Grid.Column="1"
+                    StrokeShape="RoundRectangle 18" Padding="10" Stroke="#1F7A6C" BackgroundColor="#14524C"
+                    BindingContext="{Binding Characters[1]}"
+                    x:DataType="vm:CharacterCardVm">
+                <VerticalStackLayout Spacing="8">
+                    <Image x:Name="PortraitLila" Source="{Binding ImageSource}" HeightRequest="140" Aspect="AspectFit" />
+                    <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+                    <Label Text="{Binding Description}" FontSize="12" TextColor="#C6E0C0" HorizontalOptions="Center" />
+                    <Button Text="Sec"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CharacterSelectViewModel}}, Path=ChooseCommand}"
+                            CommandParameter="{Binding .}"
+                            BackgroundColor="#F5A623" TextColor="#1B1B1B" FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Border>
+            <!-- Momo -->
+            <Border Grid.Row="1" Grid.Column="0"
+                    StrokeShape="RoundRectangle 18" Padding="10" Stroke="#1F7A6C" BackgroundColor="#14524C"
+                    BindingContext="{Binding Characters[2]}"
+                    x:DataType="vm:CharacterCardVm">
+                <VerticalStackLayout Spacing="8">
+                    <Image x:Name="PortraitMomo" Source="{Binding ImageSource}" HeightRequest="140" Aspect="AspectFit" />
+                    <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+                    <Label Text="{Binding Description}" FontSize="12" TextColor="#C6E0C0" HorizontalOptions="Center" />
+                    <Button Text="Sec"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CharacterSelectViewModel}}, Path=ChooseCommand}"
+                            CommandParameter="{Binding .}"
+                            BackgroundColor="#F5A623" TextColor="#1B1B1B" FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Border>
+            <!-- Papagan -->
+            <Border Grid.Row="1" Grid.Column="1"
+                    StrokeShape="RoundRectangle 18" Padding="10" Stroke="#1F7A6C" BackgroundColor="#14524C"
+                    BindingContext="{Binding Characters[3]}"
+                    x:DataType="vm:CharacterCardVm">
+                <VerticalStackLayout Spacing="8">
+                    <Image x:Name="PortraitPapagan" Source="{Binding ImageSource}" HeightRequest="140" Aspect="AspectFit" />
+                    <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+                    <Label Text="{Binding Description}" FontSize="12" TextColor="#C6E0C0" HorizontalOptions="Center" />
+                    <Button Text="Sec"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CharacterSelectViewModel}}, Path=ChooseCommand}"
+                            CommandParameter="{Binding .}"
+                            BackgroundColor="#F5A623" TextColor="#1B1B1B" FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+        <Label Grid.Row="2" Text="Karakter secimi her zaman Ayarlar'dan degisir"
+               TextColor="#7FA29B" FontSize="11" HorizontalOptions="Center" />
+    </Grid>
+</ContentPage>

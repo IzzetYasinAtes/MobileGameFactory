@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:IslandMerge.ViewModels"
+             x:Class="IslandMerge.Views.BiomeSelectPage"
+             x:Name="Page"
+             x:DataType="vm:BiomeSelectViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#0E3B39">
+    <Grid RowDefinitions="*,Auto" Padding="0">
+        <CollectionView Grid.Row="0" ItemsSource="{Binding Biomes}" Margin="12">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:BiomeCardVm">
+                    <Border Margin="0,6"
+                            StrokeShape="RoundRectangle 16"
+                            Stroke="#1F7A6C"
+                            StrokeThickness="1"
+                            HeightRequest="140"
+                            Loaded="BiomeBorder_Loaded">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={x:Reference Page}, Path=BindingContext.SelectBiomeCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                        <Grid>
+                            <Image Source="{Binding ImageSource}" Aspect="AspectFill" />
+                            <BoxView BackgroundColor="#80000000" />
+                            <Grid ColumnDefinitions="*,Auto" Padding="14">
+                                <VerticalStackLayout Grid.Column="0" VerticalOptions="End">
+                                    <Label Text="{Binding Name}" FontSize="20" FontAttributes="Bold" TextColor="White" />
+                                    <Label Text="{Binding FirstLevel, StringFormat='Seviye {0}+'}"
+                                           FontSize="12" TextColor="#C6E0C0" />
+                                </VerticalStackLayout>
+                                <Border Grid.Column="1"
+                                        StrokeShape="RoundRectangle 6"
+                                        BackgroundColor="#AA1B1B1B"
+                                        Padding="10,4"
+                                        VerticalOptions="Start"
+                                        IsVisible="{Binding IsUnlocked, Converter={StaticResource InverseBoolConverter}}">
+                                    <Label Text="Yakinda"
+                                           TextColor="#F5A623" FontAttributes="Bold" FontSize="12" />
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Label Grid.Row="1"
+               Text="{Binding InfoText}"
+               TextColor="#F5E6A3"
+               FontSize="13"
+               HorizontalTextAlignment="Center"
+               Margin="12,4,12,12"
+               IsVisible="{Binding InfoText, Converter={StaticResource NonEmptyToBoolConverter}}" />
+    </Grid>
+</ContentPage>

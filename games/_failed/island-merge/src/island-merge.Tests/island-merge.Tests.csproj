@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>IslandMerge.Tests</RootNamespace>
+    <AssemblyName>IslandMerge.Tests</AssemblyName>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+  </ItemGroup>
+
+  <!-- Core logic dosyalarini MAUI projesinden link'le — MAUI derlemesi yapmadan unit test.
+       Bu linkler, SQLite attribute'li Model dosyalarini da icerir cunku GameLogic Item/Player kullanir. -->
+  <ItemGroup>
+    <Compile Include="..\island-merge\Models\ItemChain.cs" Link="Linked\Models\ItemChain.cs" />
+    <Compile Include="..\island-merge\Models\Item.cs" Link="Linked\Models\Item.cs" />
+    <Compile Include="..\island-merge\Models\Biome.cs" Link="Linked\Models\Biome.cs" />
+    <Compile Include="..\island-merge\Models\Player.cs" Link="Linked\Models\Player.cs" />
+    <Compile Include="..\island-merge\Models\Quest.cs" Link="Linked\Models\Quest.cs" />
+    <Compile Include="..\island-merge\Models\FogTile.cs" Link="Linked\Models\FogTile.cs" />
+    <Compile Include="..\island-merge\Models\BoardConstants.cs" Link="Linked\Models\BoardConstants.cs" />
+    <Compile Include="..\island-merge\GameLogic\MergeEngine.cs" Link="Linked\GameLogic\MergeEngine.cs" />
+    <Compile Include="..\island-merge\GameLogic\EnergySystem.cs" Link="Linked\GameLogic\EnergySystem.cs" />
+    <Compile Include="..\island-merge\GameLogic\FogSystem.cs" Link="Linked\GameLogic\FogSystem.cs" />
+    <Compile Include="..\island-merge\GameLogic\DifficultyCurve.cs" Link="Linked\GameLogic\DifficultyCurve.cs" />
+    <Compile Include="..\island-merge\GameLogic\QuestEvaluator.cs" Link="Linked\GameLogic\QuestEvaluator.cs" />
+    <Compile Include="..\island-merge\Models\BiomeCatalog.cs" Link="Linked\Models\BiomeCatalog.cs" />
+    <!-- Services used by InterstitialGuard / RewardedCooldown unit tests. -->
+    <Compile Include="..\island-merge\Services\IAdService.cs" Link="Linked\Services\IAdService.cs" />
+    <Compile Include="..\island-merge\Services\InterstitialGuard.cs" Link="Linked\Services\InterstitialGuard.cs" />
+    <Compile Include="..\island-merge\Services\RewardedCooldown.cs" Link="Linked\Services\RewardedCooldown.cs" />
+    <Compile Include="..\island-merge\Services\IStorage.cs" Link="Linked\Services\IStorage.cs" />
+    <Compile Include="..\island-merge\Services\SqliteStorage.cs" Link="Linked\Services\SqliteStorage.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>
