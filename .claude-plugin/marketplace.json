@@ -1,0 +1,61 @@
+{
+  "name": "MobileGameFactory",
+  "version": "2.0.0",
+  "description": "Otonom mobil oyun üretim sistemi — 19 agent + 18 rule + 20+ skill + 11 template. Her oyun için stage planning, juice budget, polish-or-kill disiplini.",
+  "owner": "mobilegamefactory",
+  "entrypoint": ".claude/",
+  "components": {
+    "agents": 19,
+    "rules": 18,
+    "skills": 20,
+    "templates": 11,
+    "workflows": 1,
+    "commands": 4
+  },
+  "requires": {
+    "claude-code-version": ">=2.0",
+    "mcp-servers": [
+      {
+        "name": "factory",
+        "path": "tools/mcp-server",
+        "description": "Local MCP server: state + inbox + artifacts + logs"
+      }
+    ],
+    "optional-mcp-servers": [
+      {
+        "name": "ludo-ai",
+        "description": "Game ideation + concept gen",
+        "priority": "P1"
+      },
+      {
+        "name": "figma",
+        "description": "UI asset + design sync",
+        "priority": "P1"
+      },
+      {
+        "name": "stability-ai",
+        "description": "AI asset generation (character, environment)",
+        "priority": "P1"
+      },
+      {
+        "name": "play-store-mcp",
+        "description": "Google Play Console API metadata automation",
+        "priority": "P2"
+      },
+      {
+        "name": "bitrise",
+        "description": "iOS build via cloud Mac",
+        "priority": "P2"
+      }
+    ]
+  },
+  "lifecycle": ".claude/workflows/new-game-lifecycle.md",
+  "documentation": "CLAUDE.md",
+  "postmortem-pattern": "games/<id>/POSTMORTEM.md",
+  "commands": [
+    "/new-game <fikir>",
+    "/status",
+    "/ship <game-id>",
+    "/kill <game-id>"
+  ]
+}

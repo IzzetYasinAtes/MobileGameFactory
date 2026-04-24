@@ -50,6 +50,7 @@ public sealed class BoardCanvas : SKCanvasView
 
     private int? _dragStartCell;
     private int? _dragEndCell;
+    private bool _didMove;
 
     // Per-cell pop progress (0..1 bell curve). Scale = 1 + progress * 0.2.
     // MAUI Animation API ile driven — UI thread, 60 FPS safe.
@@ -114,31 +115,62 @@ public sealed class BoardCanvas : SKCanvasView
         switch (e.ActionType)
         {
             case SKTouchAction.Pressed:
-                _dragStartCell = CellAt(e.Location);
-                _dragEndCell = _dragStartCell;
+                var pressed = CellAt(e.Location);
+                if (_dragStartCell is null)
+                {
+                    _dragStartCell = pressed;
+                    _didMove = false;
+                }
+                else if (pressed != _dragStartCell)
+                {
+                    TryExecuteMerge(_dragStartCell.Value, pressed!.Value);
+                    _dragStartCell = null;
+                    _dragEndCell = null;
+                    _didMove = false;
+                }
+                else
+                {
+                    _dragStartCell = null;
+                    _didMove = false;
+                }
+                InvalidateSurface();
                 e.Handled = true;
                 break;
             case SKTouchAction.Moved:
+                _didMove = true;
                 _dragEndCell = CellAt(e.Location);
                 e.Handled = true;
                 break;
             case SKTouchAction.Released:
-                _dragEndCell = CellAt(e.Location);
-                if (_dragStartCell is int src && _dragEndCell is int dst && src != dst)
+                if (_didMove && _dragStartCell is int src && _dragEndCell is int dst && src != dst)
                 {
-                    if (MergeCommand is not null && MergeCommand.CanExecute(null))
-                    {
-                        MergeCommand.Execute((src, dst));
-                    }
+                    TryExecuteMerge(src, dst);
+                    _dragStartCell = null;
+                    _dragEndCell = null;
+                    _didMove = false;
+                    InvalidateSurface();
                 }
-                _dragStartCell = null;
-                _dragEndCell = null;
                 e.Handled = true;
                 break;
             case SKTouchAction.Cancelled:
                 _dragStartCell = null;
                 _dragEndCell = null;
+                _didMove = false;
+                InvalidateSurface();
                 break;
+        }
+    }
+
+    private void TryExecuteMerge(int src, int dst)
+    {
+        if (MergeCommand is null)
+        {
+            return;
+        }
+        var param = (src, dst);
+        if (MergeCommand.CanExecute(param))
+        {
+            MergeCommand.Execute(param);
         }
     }
 
